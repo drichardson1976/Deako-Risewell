@@ -73,10 +73,12 @@
     <button onclick="prevSlide()" class="text-gold-300 hover:text-gold-400 transition-colors p-1">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
-    <span class="text-gold-300 text-sm font-medium slide-counter" id="slideCounter">1 / 17</span>
     <button onclick="nextSlide()" class="text-gold-300 hover:text-gold-400 transition-colors p-1">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
+  </div>
+  <div style="position:fixed;bottom:18px;right:16px;z-index:50;background:rgba(27,54,93,0.92);backdrop-filter:blur(4px);border:1px solid rgba(232,165,48,0.3);border-radius:20px;padding:4px 12px;">
+    <span class="text-gold-300 text-sm font-medium slide-counter" id="slideCounter">1 / 17</span>
   </div>
 
   <!-- Progress bar -->
@@ -782,6 +784,7 @@
     function prevSlide() { showSlide(current - 1); }
 
     document.addEventListener('keydown', (e) => {
+      if (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT') return;
       if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
       if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
       if (e.key === 'Home') { e.preventDefault(); showSlide(1); }
