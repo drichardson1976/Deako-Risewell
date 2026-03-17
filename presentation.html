@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deako + Vivint — A Smarter Home for Risewell</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    .slide { display: none; min-height: 100vh; }
+    .slide.active { display: flex; }
+    .fade-in { animation: fadeIn 0.5s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .gradient-text { background: linear-gradient(135deg, #f97316, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .gradient-text-green { background: linear-gradient(135deg, #22c55e, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .slide-counter { font-variant-numeric: tabular-nums; }
+    .icon-circle { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; }
+    .icon-sm { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+    .product-img { max-height: 160px; object-fit: contain; border-radius: 8px; }
+    .product-img-lg { max-height: 200px; object-fit: contain; border-radius: 8px; }
+    .savings-highlight { background: linear-gradient(135deg, rgba(34,197,94,0.15), rgba(59,130,246,0.15)); border: 1px solid rgba(34,197,94,0.3); }
+    .cost-current { border-left: 4px solid #ef4444; }
+    .cost-new { border-left: 4px solid #22c55e; }
+    .step-line { position: relative; }
+    .step-line::before { content: ''; position: absolute; left: 19px; top: 48px; bottom: -24px; width: 2px; background: #374151; }
+    .step-line:last-child::before { display: none; }
+    .logo-img { max-height: 40px; object-fit: contain; }
+    /* Feedback panel */
+    .feedback-btn { position: fixed; bottom: 8px; right: 8px; z-index: 60; background: #1f2937; border: 1px solid #374151; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #9ca3af; font-size: 18px; transition: all 0.2s; }
+    .feedback-btn:hover { background: #374151; color: white; }
+    .feedback-panel { position: fixed; bottom: 56px; right: 8px; z-index: 60; width: 340px; max-height: 70vh; background: #111827; border: 1px solid #374151; border-radius: 12px; padding: 16px; display: none; flex-direction: column; gap: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+    .feedback-panel.open { display: flex; }
+    .feedback-panel textarea { background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 10px; color: white; font-size: 14px; resize: vertical; min-height: 80px; font-family: 'Inter', sans-serif; }
+    .feedback-panel textarea:focus { outline: none; border-color: #f97316; }
+    .feedback-panel button.submit { background: linear-gradient(135deg, #f97316, #3b82f6); border: none; border-radius: 8px; padding: 10px; color: white; font-weight: 600; cursor: pointer; font-size: 14px; }
+    .feedback-panel button.submit:hover { opacity: 0.9; }
+    .feedback-list { overflow-y: auto; max-height: 40vh; display: flex; flex-direction: column; gap: 8px; }
+    .feedback-item { background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 10px; font-size: 13px; color: #d1d5db; }
+    .feedback-item .slide-label { color: #f97316; font-weight: 600; font-size: 12px; margin-bottom: 4px; }
+    .feedback-item .status { font-size: 11px; margin-top: 4px; }
+    .feedback-item .status.open { color: #fbbf24; }
+    .feedback-item .status.fixed { color: #22c55e; }
+    .feedback-item img.feedback-screenshot { max-width: 100%; max-height: 100px; border-radius: 6px; margin-top: 6px; cursor: pointer; }
+    .drop-zone { background: #1f2937; border: 2px dashed #374151; border-radius: 8px; padding: 12px; text-align: center; color: #6b7280; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+    .drop-zone.dragover { border-color: #f97316; background: rgba(249,115,22,0.1); color: #f97316; }
+    .drop-zone:hover { border-color: #4b5563; }
+    .screenshot-modal { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
+    .screenshot-modal.open { display: flex; }
+    .screenshot-modal img { max-width: 90vw; max-height: 90vh; border-radius: 8px; }
+  </style>
+</head>
+<body class="bg-gray-950 text-white overflow-hidden">
+
+  <!-- Navigation -->
+  <div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 bg-gray-800/90 backdrop-blur-sm px-6 py-3 rounded-full shadow-2xl border border-gray-700">
+    <button onclick="prevSlide()" class="text-gray-400 hover:text-white transition-colors p-1">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="text-gray-400 text-sm font-medium slide-counter" id="slideCounter">1 / 16</span>
+    <button onclick="nextSlide()" class="text-gray-400 hover:text-white transition-colors p-1">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="fixed top-0 left-0 w-full h-1 bg-gray-800 z-50">
+    <div id="progressBar" class="h-full bg-gradient-to-r from-orange-500 to-blue-500 transition-all duration-500" style="width: 6%"></div>
+  </div>
+
+  <!-- ==================== SLIDE 1: TITLE ==================== -->
+  <div class="slide active" data-slide="1">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <div class="flex items-center gap-6 mb-10">
+        <img src="images/deako-logo.jpg" alt="Deako" class="h-12 rounded" onerror="this.style.display='none'">
+        <span class="text-4xl text-gray-600 font-light">+</span>
+        <img src="images/vivint-logo.png" alt="Vivint" class="h-12 rounded" onerror="this.style.display='none'">
+      </div>
+      <h1 class="text-5xl md:text-7xl font-black mb-6 gradient-text leading-tight">A Smarter Home<br>for Risewell</h1>
+      <p class="text-xl md:text-2xl text-gray-400 font-light mb-4">One integrated smart home solution that saves money,</p>
+      <p class="text-xl md:text-2xl text-white font-semibold mb-10">delights homebuyers, and simplifies your operations.</p>
+      <div class="flex items-center gap-6 text-lg text-gray-500">
+        <span>Prepared for Risewell Homes</span>
+        <span class="text-gray-700">|</span>
+        <span>March 2026</span>
+      </div>
+      <div class="mt-12 text-gray-600 text-sm">Press <kbd class="px-2 py-1 bg-gray-800 rounded border border-gray-700">&rarr;</kbd> or click the arrow to begin</div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 2: WHAT YOU HAVE TODAY ==================== -->
+  <div class="slide" data-slide="2">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <p class="text-red-400 font-semibold text-lg tracking-widest uppercase mb-6">Today's Reality</p>
+      <h2 class="text-4xl md:text-6xl font-bold mb-10 leading-tight max-w-5xl">Three vendors. Three apps.<br><span class="text-red-400">No integration.</span></h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mt-4">
+        <div class="bg-gray-900 rounded-2xl p-8 border border-gray-800 text-center">
+          <div class="h-40 flex items-center justify-center mb-4">
+            <img src="images/ring-pro2.jpg" alt="Ring Pro2" class="product-img" onerror="this.parentElement.innerHTML='<div class=\'text-6xl\'>🔔</div>'">
+          </div>
+          <p class="text-xl font-bold mb-1">Ring Pro2 (Wired)</p>
+          <p class="text-gray-500 text-sm mb-3">4.49" x 1.90" x 0.87"</p>
+          <p class="text-red-400 text-2xl font-bold">$275</p>
+          <p class="text-gray-600 text-sm mt-2">Ring app required</p>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-8 border border-gray-800 text-center">
+          <div class="h-40 flex items-center justify-center mb-4">
+            <img src="images/kwikset-939.jpg" alt="Kwikset 939" class="product-img" onerror="this.parentElement.innerHTML='<div class=\'text-6xl\'>🔒</div>'">
+          </div>
+          <p class="text-xl font-bold mb-1">Kwikset 939 Halo</p>
+          <p class="text-gray-500 text-sm mb-3">5.6" x 2.8" x 1.2"</p>
+          <p class="text-red-400 text-2xl font-bold">$200</p>
+          <p class="text-gray-600 text-sm mt-2">Kwikset app required</p>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-8 border border-gray-800 text-center">
+          <div class="h-40 flex items-center justify-center mb-4">
+            <img src="images/honeywell-t6.jpg" alt="Honeywell T6" class="product-img" onerror="this.parentElement.innerHTML='<div class=\'text-6xl\'>🌡️</div>'">
+          </div>
+          <p class="text-xl font-bold mb-1">Honeywell T6 Pro</p>
+          <p class="text-gray-500 text-sm mb-3">4.06" x 4.06" x 1.16"</p>
+          <p class="text-red-400 text-2xl font-bold">$115</p>
+          <p class="text-gray-600 text-sm mt-2">Honeywell app required</p>
+        </div>
+      </div>
+      <div class="mt-10 bg-red-950/30 rounded-xl px-8 py-5 border border-red-900/50 max-w-3xl">
+        <p class="text-2xl font-bold text-red-400">$590 per home</p>
+        <p class="text-gray-400 mt-2">No security. No monitoring. No professional installation. Homebuyers set up everything themselves.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 3: THE PROBLEMS ==================== -->
+  <div class="slide" data-slide="3">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <p class="text-red-400 font-semibold text-lg tracking-widest uppercase mb-6">The Hidden Costs</p>
+      <h2 class="text-4xl md:text-6xl font-bold mb-12 leading-tight max-w-5xl">What $590/home<br><span class="text-red-400">doesn't</span> get you</h2>
+      <div class="max-w-3xl w-full space-y-6">
+        <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 flex items-start gap-5">
+          <div class="icon-sm bg-red-500/20 text-red-400 flex-shrink-0">x</div>
+          <div class="text-left">
+            <p class="text-xl font-semibold">No security system</p>
+            <p class="text-gray-400">No smart panel, no sensors, no monitoring option. Just standalone devices.</p>
+          </div>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 flex items-start gap-5">
+          <div class="icon-sm bg-red-500/20 text-red-400 flex-shrink-0">x</div>
+          <div class="text-left">
+            <p class="text-xl font-semibold">Homebuyers do their own setup</p>
+            <p class="text-gray-400">Three different devices, three different apps, three different Wi-Fi configurations. Your buyers are on their own.</p>
+          </div>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 flex items-start gap-5">
+          <div class="icon-sm bg-red-500/20 text-red-400 flex-shrink-0">x</div>
+          <div class="text-left">
+            <p class="text-xl font-semibold">Three separate support channels</p>
+            <p class="text-gray-400">Problems with the lock? Call Kwikset. Doorbell issues? Call Ring. Thermostat? Call Honeywell. Nobody owns the full experience.</p>
+          </div>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 flex items-start gap-5">
+          <div class="icon-sm bg-red-500/20 text-red-400 flex-shrink-0">x</div>
+          <div class="text-left">
+            <p class="text-xl font-semibold">No expandability</p>
+            <p class="text-gray-400">Want to add cameras, sensors, or smoke detectors? Start from scratch with yet another vendor.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 4: THE SOLUTION ==================== -->
+  <div class="slide" data-slide="4">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <p class="text-green-400 font-semibold text-lg tracking-widest uppercase mb-6">The Solution</p>
+      <h2 class="text-4xl md:text-7xl font-bold mb-10 leading-tight max-w-5xl">One partner.<br>One platform.<br><span class="gradient-text-green">One call.</span></h2>
+      <div class="bg-gray-900 rounded-2xl p-10 border border-gray-800 max-w-3xl">
+        <p class="text-2xl text-gray-300 leading-relaxed">Deako and Vivint have partnered to deliver a complete, integrated smart home solution purpose-built for new construction.</p>
+        <p class="text-xl text-gray-500 mt-6">You already trust Deako for smart lighting in every home. Now that same relationship gives you a full smart home platform - doorbell, lock, thermostat, and security - at a lower cost than what you're paying today.</p>
+        <p class="text-xl text-green-400 font-semibold mt-6">Deako is your single point of contact for everything.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 5: PRODUCT COMPARISON - DOORBELL ==================== -->
+  <div class="slide" data-slide="5">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <p class="text-blue-400 font-semibold text-lg tracking-widest uppercase mb-6">Side-by-Side Comparison</p>
+      <h2 class="text-4xl md:text-5xl font-bold mb-10">Doorbell Camera</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl w-full">
+        <div class="bg-gray-900 rounded-2xl p-8 border border-red-900/50 cost-current">
+          <p class="text-red-400 font-bold text-sm tracking-widest uppercase mb-4">Current</p>
+          <div class="h-48 flex items-center justify-center mb-6">
+            <img src="images/ring-pro2.jpg" alt="Ring Pro2" class="product-img-lg" onerror="this.parentElement.innerHTML='<div class=\'text-6xl\'>🔔</div>'">
+          </div>
+          <p class="text-2xl font-bold">Ring Video Doorbell Pro 2</p>
+          <p class="text-gray-500 text-sm mt-2 mb-4">Model: Ring Pro 2 (Wired)</p>
+          <div class="bg-gray-800 rounded-xl p-4 text-left space-y-2">
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Dimensions:</span> 4.49" x 1.90" x 0.87"</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Resolution:</span> 1536 x 1536</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">FOV:</span> 150° x 150°</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Wi-Fi:</span> 2.4/5 GHz</p>
+          </div>
+          <p class="text-red-400 text-3xl font-bold mt-6">$275</p>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-8 border border-green-900/50 cost-new">
+          <p class="text-green-400 font-bold text-sm tracking-widest uppercase mb-4">Deako + Vivint</p>
+          <div class="h-48 flex items-center justify-center mb-6">
+            <img src="images/vivint-doorbell2.png" alt="Vivint Doorbell" class="product-img-lg" onerror="this.parentElement.innerHTML='<div class=\'text-6xl\'>🔔</div>'">
+          </div>
+          <p class="text-2xl font-bold">Vivint Doorbell Camera Pro</p>
+          <p class="text-gray-500 text-sm mt-2 mb-4">Model: VS-DBC350-WHT (Gen 2)</p>
+          <div class="bg-gray-800 rounded-xl p-4 text-left space-y-2">
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Dimensions:</span> 4.6" x 1.5" x 1.3"</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Resolution:</span> 1080p HDR</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">FOV:</span> 180° x 180°</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Wi-Fi:</span> 2.4/5 GHz</p>
+          </div>
+          <p class="text-green-400 text-3xl font-bold mt-6">Included</p>
+        </div>
+      </div>
+      <p class="text-gray-500 mt-8 text-lg">Vivint doorbell is <span class="text-white font-semibold">slimmer</span> (1.5" vs 1.90" wide) with a <span class="text-white font-semibold">wider field of view</span> (180° vs 150°)</p>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 6: PRODUCT COMPARISON - LOCK ==================== -->
+  <div class="slide" data-slide="6">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <p class="text-blue-400 font-semibold text-lg tracking-widest uppercase mb-6">Side-by-Side Comparison</p>
+      <h2 class="text-4xl md:text-5xl font-bold mb-10">Smart Lock</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl w-full">
+        <div class="bg-gray-900 rounded-2xl p-8 border border-red-900/50 cost-current">
+          <p class="text-red-400 font-bold text-sm tracking-widest uppercase mb-4">Current</p>
+          <div class="h-48 flex items-center justify-center mb-6">
+            <img src="images/kwikset-939.jpg" alt="Kwikset 939" class="product-img-lg" onerror="this.parentElement.innerHTML='<div class=\'text-6xl\'>🔒</div>'">
+          </div>
+          <p class="text-2xl font-bold">Kwikset 939 Halo</p>
+          <p class="text-gray-500 text-sm mt-2 mb-4">Model: 939 WIFI TSCR 15</p>
+          <div class="bg-gray-800 rounded-xl p-4 text-left space-y-2">
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Dimensions:</span> 5.6" x 2.8" x 1.2"</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Codes:</span> Up to 250</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Connect:</span> Wi-Fi (no hub)</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">App:</span> Kwikset app</p>
+          </div>
+          <p class="text-red-400 text-3xl font-bold mt-6">$200</p>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-8 border border-green-900/50 cost-new">
+          <p class="text-green-400 font-bold text-sm tracking-widest uppercase mb-4">Deako + Vivint</p>
+          <div class="h-48 flex items-center justify-center mb-6">
+            <img src="images/vivint-lock.png" alt="Vivint Lock" class="product-img-lg" onerror="this.parentElement.innerHTML='<div class=\'text-6xl\'>🔒</div>'">
+          </div>
+          <p class="text-2xl font-bold">Vivint Smart Lock</p>
+          <p class="text-gray-500 text-sm mt-2 mb-4">Model: Kwikset 888 SmartCode (Z-Wave)</p>
+          <div class="bg-gray-800 rounded-xl p-4 text-left space-y-2">
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Dimensions:</span> 4.59" x 2.66" x 1.19"</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Codes:</span> Up to 30</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Connect:</span> Z-Wave (via panel)</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">App:</span> Vivint app</p>
+          </div>
+          <p class="text-green-400 text-3xl font-bold mt-6">Included</p>
+        </div>
+      </div>
+      <p class="text-gray-500 mt-8 text-lg">Vivint lock is <span class="text-white font-semibold">more compact</span> (4.59" vs 5.6" tall) and integrates directly with the Vivint smart home panel</p>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 7: PRODUCT COMPARISON - THERMOSTAT ==================== -->
+  <div class="slide" data-slide="7">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <p class="text-blue-400 font-semibold text-lg tracking-widest uppercase mb-6">Side-by-Side Comparison</p>
+      <h2 class="text-4xl md:text-5xl font-bold mb-10">Smart Thermostat</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl w-full">
+        <div class="bg-gray-900 rounded-2xl p-8 border border-red-900/50 cost-current">
+          <p class="text-red-400 font-bold text-sm tracking-widest uppercase mb-4">Current</p>
+          <div class="h-48 flex items-center justify-center mb-6">
+            <img src="images/honeywell-t6.jpg" alt="Honeywell T6" class="product-img-lg" onerror="this.parentElement.innerHTML='<div class=\'text-6xl\'>🌡️</div>'">
+          </div>
+          <p class="text-2xl font-bold">Honeywell T6 Pro</p>
+          <p class="text-gray-500 text-sm mt-2 mb-4">Model: TH6220WF2006</p>
+          <div class="bg-gray-800 rounded-xl p-4 text-left space-y-2">
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Dimensions:</span> 4.06" x 4.06" x 1.16"</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Display:</span> 6.89 sq in touchscreen</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Power:</span> 24VAC (C-wire)</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">App:</span> Honeywell app</p>
+          </div>
+          <p class="text-red-400 text-3xl font-bold mt-6">$115</p>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-8 border border-green-900/50 cost-new">
+          <p class="text-green-400 font-bold text-sm tracking-widest uppercase mb-4">Deako + Vivint</p>
+          <div class="h-48 flex items-center justify-center mb-6">
+            <img src="images/vivint-thermostat.png" alt="Vivint Element" class="product-img-lg" onerror="this.parentElement.innerHTML='<div class=\'text-6xl\'>🌡️</div>'">
+          </div>
+          <p class="text-2xl font-bold">Vivint Element Thermostat</p>
+          <p class="text-gray-500 text-sm mt-2 mb-4">Model: V-SCT200</p>
+          <div class="bg-gray-800 rounded-xl p-4 text-left space-y-2">
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Dimensions:</span> 4.5" x 4.5" x 0.94"</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Display:</span> Touchscreen w/ sensors</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">Power:</span> 4 AA or 24VAC</p>
+            <p class="text-gray-300"><span class="text-gray-500 w-24 inline-block">App:</span> Vivint app</p>
+          </div>
+          <p class="text-green-400 text-3xl font-bold mt-6">Included</p>
+        </div>
+      </div>
+      <p class="text-gray-500 mt-8 text-lg">Vivint Element is <span class="text-white font-semibold">thinner</span> (0.94" vs 1.16" deep) with proximity and ambient light sensors built in</p>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 8: BONUS - WHAT ELSE IS INCLUDED ==================== -->
+  <div class="slide" data-slide="8">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <p class="text-green-400 font-semibold text-lg tracking-widest uppercase mb-6">Included at No Extra Cost</p>
+      <h2 class="text-4xl md:text-6xl font-bold mb-10 leading-tight max-w-5xl">You also get these<br><span class="gradient-text-green">at no additional cost</span></h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+        <div class="bg-gray-900 rounded-2xl p-8 border border-gray-800 flex items-start gap-5">
+          <div class="icon-circle bg-green-500/20 text-green-400 flex-shrink-0">+</div>
+          <div class="text-left">
+            <p class="text-xl font-bold">Vivint Smart Hub</p>
+            <p class="text-gray-400">Central control panel with touchscreen. The brain of the smart home system.</p>
+          </div>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-8 border border-gray-800 flex items-start gap-5">
+          <div class="icon-circle bg-green-500/20 text-green-400 flex-shrink-0">+</div>
+          <div class="text-left">
+            <p class="text-xl font-bold">Doorbell Chime Extender</p>
+            <p class="text-gray-400">Extends doorbell sound throughout the home. No more missed visitors.</p>
+          </div>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-8 border border-gray-800 flex items-start gap-5">
+          <div class="icon-circle bg-green-500/20 text-green-400 flex-shrink-0">+</div>
+          <div class="text-left">
+            <p class="text-xl font-bold">Vivint App</p>
+            <p class="text-gray-400">One unified app to control doorbell, lock, thermostat, and any future devices.</p>
+          </div>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-8 border border-gray-800 flex items-start gap-5">
+          <div class="icon-circle bg-green-500/20 text-green-400 flex-shrink-0">+</div>
+          <div class="text-left">
+            <p class="text-xl font-bold">LiftMaster 2100L Compatible</p>
+            <p class="text-gray-400">Your existing garage door opener integrates via myQ. $50 one-time activation.</p>
+          </div>
+        </div>
+      </div>
+      <p class="text-gray-500 text-lg mt-8">None of this exists in the current Ring + Kwikset + Honeywell setup.</p>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 9: THE SAVINGS ==================== -->
+  <div class="slide" data-slide="9">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <p class="text-green-400 font-semibold text-lg tracking-widest uppercase mb-6">The Bottom Line</p>
+      <h2 class="text-4xl md:text-6xl font-bold mb-12">More product. Less cost.</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full mb-10">
+        <div class="bg-gray-900 rounded-2xl p-8 border border-red-900/50 cost-current">
+          <p class="text-red-400 font-bold text-sm tracking-widest uppercase mb-6">Today</p>
+          <div class="space-y-3 text-left">
+            <div class="flex justify-between text-lg"><span class="text-gray-400">Ring Pro2 Doorbell</span><span class="text-white font-semibold">$275</span></div>
+            <div class="flex justify-between text-lg"><span class="text-gray-400">Kwikset 939 Lock</span><span class="text-white font-semibold">$200</span></div>
+            <div class="flex justify-between text-lg"><span class="text-gray-400">Honeywell T6 Thermostat</span><span class="text-white font-semibold">$115</span></div>
+            <div class="flex justify-between text-lg"><span class="text-gray-400">Smart Hub / Panel</span><span class="text-gray-600">none</span></div>
+            <div class="flex justify-between text-lg"><span class="text-gray-400">Chime Extender</span><span class="text-gray-600">none</span></div>
+            <div class="flex justify-between text-lg"><span class="text-gray-400">Unified App</span><span class="text-gray-600">none</span></div>
+            <div class="flex justify-between text-lg"><span class="text-gray-400">Pro Installation</span><span class="text-gray-600">none</span></div>
+            <hr class="border-gray-700 my-3">
+            <div class="flex justify-between text-2xl"><span class="text-white font-bold">Total</span><span class="text-red-400 font-bold">$590 / home</span></div>
+          </div>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-8 border border-green-900/50 cost-new">
+          <p class="text-green-400 font-bold text-sm tracking-widest uppercase mb-6">Deako + Vivint</p>
+          <div class="space-y-3 text-left">
+            <div class="flex justify-between text-lg"><span class="text-gray-400">Vivint Doorbell Camera Pro</span><span class="text-green-400 font-semibold">included</span></div>
+            <div class="flex justify-between text-lg"><span class="text-gray-400">Vivint Smart Lock</span><span class="text-green-400 font-semibold">included</span></div>
+            <div class="flex justify-between text-lg"><span class="text-gray-400">Vivint Element Thermostat</span><span class="text-green-400 font-semibold">included</span></div>
+            <div class="flex justify-between text-lg"><span class="text-gray-400">Vivint Smart Hub</span><span class="text-green-400 font-semibold">included</span></div>
+            <div class="flex justify-between text-lg"><span class="text-gray-400">Doorbell Chime Extender</span><span class="text-green-400 font-semibold">included</span></div>
+            <div class="flex justify-between text-lg"><span class="text-gray-400">Vivint App</span><span class="text-green-400 font-semibold">included</span></div>
+            <div class="flex justify-between text-lg"><span class="text-gray-400">White Glove Installation</span><span class="text-green-400 font-semibold">included</span></div>
+            <hr class="border-gray-700 my-3">
+            <div class="flex justify-between text-2xl"><span class="text-white font-bold">Total</span><span class="text-green-400 font-bold">$300 / home</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="savings-highlight rounded-2xl px-10 py-6 max-w-2xl">
+        <p class="text-4xl font-black gradient-text-green">Save $290 per home</p>
+        <p class="text-gray-400 text-lg mt-2">While giving your homebuyers a dramatically better experience</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 10: SCALE THE SAVINGS ==================== -->
+  <div class="slide" data-slide="10">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <p class="text-green-400 font-semibold text-lg tracking-widest uppercase mb-6">At Scale</p>
+      <h2 class="text-4xl md:text-6xl font-bold mb-12">What $290/home looks like<br>across your communities</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mb-10">
+        <div class="bg-gray-900 rounded-2xl p-8 border border-gray-800">
+          <p class="text-gray-500 text-sm uppercase tracking-widest mb-3">Liberty View, Bothell</p>
+          <p class="text-lg text-gray-400 mb-2">23 homes</p>
+          <p class="text-3xl font-black gradient-text-green">$6,670</p>
+          <p class="text-gray-500 text-sm mt-2">in savings</p>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-8 border border-gray-800">
+          <p class="text-gray-500 text-sm uppercase tracking-widest mb-3">Pine Ranch, Cle Elum</p>
+          <p class="text-lg text-gray-400 mb-2">1,000+ homes</p>
+          <p class="text-3xl font-black gradient-text-green">$290,000+</p>
+          <p class="text-gray-500 text-sm mt-2">in savings</p>
+        </div>
+        <div class="bg-gradient-to-b from-green-900/20 to-gray-900 rounded-2xl p-8 border border-green-800">
+          <p class="text-gray-500 text-sm uppercase tracking-widest mb-3">Risewell National</p>
+          <p class="text-lg text-gray-400 mb-2">~4,000 homes/year</p>
+          <p class="text-4xl font-black gradient-text-green">$1.16M</p>
+          <p class="text-green-400 text-sm mt-2 font-semibold">per year in savings</p>
+        </div>
+      </div>
+      <p class="text-gray-500 text-lg max-w-3xl">These savings are on top of giving every homebuyer a better product, better experience, and professional installation.</p>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 11: WHITE GLOVE EXPERIENCE ==================== -->
+  <div class="slide" data-slide="11">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <p class="text-blue-400 font-semibold text-lg tracking-widest uppercase mb-6">The Homebuyer Experience</p>
+      <h2 class="text-4xl md:text-6xl font-bold mb-12">White glove from<br>close to connected</h2>
+      <div class="max-w-3xl w-full space-y-6">
+        <div class="flex items-start gap-5 step-line">
+          <div class="icon-circle bg-blue-500/20 text-blue-400">1</div>
+          <div class="text-left">
+            <p class="text-xl font-semibold">Builder sells the home</p>
+            <p class="text-gray-400">Homebuyer sees the smart home experience in the model home or design center, outfitted by Deako.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-5 step-line">
+          <div class="icon-circle bg-blue-500/20 text-blue-400">2</div>
+          <div class="text-left">
+            <p class="text-xl font-semibold">Deako meets with every buyer</p>
+            <p class="text-gray-400">Before close, Deako contacts each homebuyer to explain their smart home, how it works, and offers upgrade options.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-5 step-line">
+          <div class="icon-circle bg-blue-500/20 text-blue-400">3</div>
+          <div class="text-left">
+            <p class="text-xl font-semibold">Buyer takes ownership & gets internet</p>
+            <p class="text-gray-400">Homebuyer sets up their internet service provider. That's the only thing they need to do.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-5 step-line">
+          <div class="icon-circle bg-green-500/20 text-green-400">4</div>
+          <div class="text-left">
+            <p class="text-xl font-semibold">Vivint installs everything</p>
+            <p class="text-gray-400">A Vivint technician comes to the home and professionally installs and configures the complete system. The homeowner doesn't lift a finger.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-5">
+          <div class="icon-circle bg-green-500/20 text-green-400">5</div>
+          <div class="text-left">
+            <p class="text-xl font-semibold">Ongoing support</p>
+            <p class="text-gray-400">Vivint handles all warranty and support for Vivint products. Deako handles all warranty and support for Deako products. The builder is hands-off.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 12: DEAKO SMART LIGHTING ==================== -->
+  <div class="slide" data-slide="12">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <p class="text-orange-400 font-semibold text-lg tracking-widest uppercase mb-6">Already in Every Risewell Home</p>
+      <h2 class="text-4xl md:text-6xl font-bold mb-10">Deako Smart Lighting</h2>
+      <p class="text-xl text-gray-400 mb-10 max-w-3xl">With 40 Deako connectors already standard in every Risewell home, your buyers have a smart-home-ready lighting system from day one.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+        <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 flex items-start gap-4">
+          <div class="icon-sm bg-orange-500/20 text-orange-400 flex-shrink-0">1</div>
+          <div class="text-left">
+            <p class="text-lg font-bold">Lighting Scenes</p>
+            <p class="text-gray-400">One tap to set the mood - bedtime, movie night, dinner, leaving home. A group of lights set exactly how you want them.</p>
+          </div>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 flex items-start gap-4">
+          <div class="icon-sm bg-orange-500/20 text-orange-400 flex-shrink-0">2</div>
+          <div class="text-left">
+            <p class="text-lg font-bold">Schedules</p>
+            <p class="text-gray-400">Exterior lights on before sunset, off before sunrise. Automatic. Every day.</p>
+          </div>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 flex items-start gap-4">
+          <div class="icon-sm bg-orange-500/20 text-orange-400 flex-shrink-0">3</div>
+          <div class="text-left">
+            <p class="text-lg font-bold">Timers</p>
+            <p class="text-gray-400">Lights auto-off after a set time. Perfect for bathrooms, closets, laundry rooms, garages - anywhere you forget to turn off the light.</p>
+          </div>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 flex items-start gap-4">
+          <div class="icon-sm bg-orange-500/20 text-orange-400 flex-shrink-0">4</div>
+          <div class="text-left">
+            <p class="text-lg font-bold">Motion Sensors</p>
+            <p class="text-gray-400">Walk into the garage with groceries or the laundry room with a full basket - lights come on hands-free.</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-10 bg-orange-950/30 rounded-xl px-8 py-5 border border-orange-900/50 max-w-3xl">
+        <p class="text-xl text-orange-400 font-bold">Homebuyer upgrade: 5-pack of smart switches for $275</p>
+        <p class="text-gray-400 mt-2">Homebuyers can start with the included connectors and snap in smart modules anytime - no electrician needed, no rewiring, no risk.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 13: EXPANDABLE PLATFORM ==================== -->
+  <div class="slide" data-slide="13">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <p class="text-purple-400 font-semibold text-lg tracking-widest uppercase mb-6">Expandable Platform</p>
+      <h2 class="text-4xl md:text-6xl font-bold mb-6">Grows with your homebuyers</h2>
+      <p class="text-xl text-gray-400 mb-10 max-w-3xl">The base system is just the beginning. Homebuyers can add any of these through Deako or at Vivint installation:</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl">
+        <div class="bg-gray-900 rounded-xl p-5 border border-gray-800 text-center">
+          <p class="text-3xl mb-3">📷</p>
+          <p class="font-semibold">Indoor Camera</p>
+          <p class="text-gray-500 text-sm mt-1">$249.99 + $5/mo</p>
+        </div>
+        <div class="bg-gray-900 rounded-xl p-5 border border-gray-800 text-center">
+          <p class="text-3xl mb-3">🎥</p>
+          <p class="font-semibold">Outdoor Camera</p>
+          <p class="text-gray-500 text-sm mt-1">$399.99 + $5/mo</p>
+        </div>
+        <div class="bg-gray-900 rounded-xl p-5 border border-gray-800 text-center">
+          <p class="text-3xl mb-3">💡</p>
+          <p class="font-semibold">Spotlight</p>
+          <p class="text-gray-500 text-sm mt-1">$249.99</p>
+        </div>
+        <div class="bg-gray-900 rounded-xl p-5 border border-gray-800 text-center">
+          <p class="text-3xl mb-3">🚨</p>
+          <p class="font-semibold">Smoke/CO Detector</p>
+          <p class="text-gray-500 text-sm mt-1">$100</p>
+        </div>
+        <div class="bg-gray-900 rounded-xl p-5 border border-gray-800 text-center">
+          <p class="text-3xl mb-3">💧</p>
+          <p class="font-semibold">Water Sensor</p>
+          <p class="text-gray-500 text-sm mt-1">$50</p>
+        </div>
+        <div class="bg-gray-900 rounded-xl p-5 border border-gray-800 text-center">
+          <p class="text-3xl mb-3">🚗</p>
+          <p class="font-semibold">Garage Door</p>
+          <p class="text-gray-500 text-sm mt-1">$50</p>
+        </div>
+        <div class="bg-gray-900 rounded-xl p-5 border border-gray-800 text-center">
+          <p class="text-3xl mb-3">🪟</p>
+          <p class="font-semibold">Glass Break Sensor</p>
+          <p class="text-gray-500 text-sm mt-1">$100</p>
+        </div>
+        <div class="bg-gray-900 rounded-xl p-5 border border-gray-800 text-center">
+          <p class="text-3xl mb-3">💡</p>
+          <p class="font-semibold">Deako Smart Switches</p>
+          <p class="text-gray-500 text-sm mt-1">5-pack: $275</p>
+        </div>
+      </div>
+      <p class="text-gray-500 text-lg mt-8">Professional monitoring available from <span class="text-white font-semibold">$34.98/mo</span> with HomeProtect+ or <span class="text-white font-semibold">$54.99/mo</span> with HomeProtect Pro</p>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 14: ONE POINT OF CONTACT ==================== -->
+  <div class="slide" data-slide="14">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <p class="text-orange-400 font-semibold text-lg tracking-widest uppercase mb-6">For Your Team</p>
+      <h2 class="text-4xl md:text-6xl font-bold mb-12">Deako handles everything</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+        <div class="bg-gray-900 rounded-2xl p-8 border border-gray-800 text-left">
+          <p class="text-orange-400 font-bold text-xl mb-5">What Deako Does</p>
+          <ul class="space-y-4 text-gray-300 text-lg">
+            <li class="flex items-start gap-3"><span class="text-orange-400 mt-0.5 font-bold">-</span> Single point of contact for your team</li>
+            <li class="flex items-start gap-3"><span class="text-orange-400 mt-0.5 font-bold">-</span> Outfits model homes & design centers</li>
+            <li class="flex items-start gap-3"><span class="text-orange-400 mt-0.5 font-bold">-</span> Trains your sales agents</li>
+            <li class="flex items-start gap-3"><span class="text-orange-400 mt-0.5 font-bold">-</span> Communicates with purchasing, construction, and electricians</li>
+            <li class="flex items-start gap-3"><span class="text-orange-400 mt-0.5 font-bold">-</span> Meets with every homebuyer before close</li>
+            <li class="flex items-start gap-3"><span class="text-orange-400 mt-0.5 font-bold">-</span> Handles all Deako warranty & support</li>
+          </ul>
+        </div>
+        <div class="bg-gray-900 rounded-2xl p-8 border border-gray-800 text-left">
+          <p class="text-blue-400 font-bold text-xl mb-5">What Vivint Does</p>
+          <ul class="space-y-4 text-gray-300 text-lg">
+            <li class="flex items-start gap-3"><span class="text-blue-400 mt-0.5 font-bold">-</span> Professional installation after close</li>
+            <li class="flex items-start gap-3"><span class="text-blue-400 mt-0.5 font-bold">-</span> Sets up and configures all devices</li>
+            <li class="flex items-start gap-3"><span class="text-blue-400 mt-0.5 font-bold">-</span> Handles all Vivint warranty & support</li>
+            <li class="flex items-start gap-3"><span class="text-blue-400 mt-0.5 font-bold">-</span> 24/7 professional monitoring (optional)</li>
+          </ul>
+          <div class="mt-6 bg-gray-800 rounded-xl p-4">
+            <p class="text-gray-400 text-base">Vivint does not interact with your builder team. <span class="text-white font-semibold">Deako is your only relationship.</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-10 bg-gray-900 rounded-xl px-8 py-5 border border-gray-800 max-w-3xl">
+        <p class="text-xl text-gray-300">Today you manage <span class="text-red-400 font-bold">3 vendor relationships</span> for smart home.</p>
+        <p class="text-xl text-green-400 font-bold mt-2">With this solution, you manage one: Deako.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 15: WHY SWITCH - SUMMARY ==================== -->
+  <div class="slide" data-slide="15">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <p class="text-green-400 font-semibold text-lg tracking-widest uppercase mb-6">The Case for Change</p>
+      <h2 class="text-4xl md:text-6xl font-bold mb-12">Why make the switch?</h2>
+      <div class="max-w-3xl w-full space-y-5">
+        <div class="flex items-center gap-5 bg-gray-900 rounded-xl p-6 border border-gray-800">
+          <div class="icon-sm bg-green-500/20 text-green-400">$</div>
+          <p class="text-xl text-gray-300 text-left"><span class="text-white font-bold">Save $290 per home</span> - more products at a lower cost than what you pay today</p>
+        </div>
+        <div class="flex items-center gap-5 bg-gray-900 rounded-xl p-6 border border-gray-800">
+          <div class="icon-sm bg-green-500/20 text-green-400">1</div>
+          <p class="text-xl text-gray-300 text-left"><span class="text-white font-bold">One vendor relationship</span> - Deako manages everything, replacing 3 separate vendors</p>
+        </div>
+        <div class="flex items-center gap-5 bg-gray-900 rounded-xl p-6 border border-gray-800">
+          <div class="icon-sm bg-green-500/20 text-green-400">+</div>
+          <p class="text-xl text-gray-300 text-left"><span class="text-white font-bold">Better homebuyer experience</span> - white glove installation, one app, no DIY setup</p>
+        </div>
+        <div class="flex items-center gap-5 bg-gray-900 rounded-xl p-6 border border-gray-800">
+          <div class="icon-sm bg-green-500/20 text-green-400">🔒</div>
+          <p class="text-xl text-gray-300 text-left"><span class="text-white font-bold">Security capability</span> - something you can't offer your buyers today</p>
+        </div>
+        <div class="flex items-center gap-5 bg-gray-900 rounded-xl p-6 border border-gray-800">
+          <div class="icon-sm bg-green-500/20 text-green-400">↗</div>
+          <p class="text-xl text-gray-300 text-left"><span class="text-white font-bold">Expandable platform</span> - cameras, sensors, monitoring - buyers can grow their system over time</p>
+        </div>
+        <div class="flex items-center gap-5 bg-gradient-to-r from-green-900/20 to-gray-900 rounded-xl p-6 border border-green-800">
+          <div class="icon-sm bg-green-500/20 text-green-400">★</div>
+          <p class="text-xl text-green-300 text-left font-semibold">Sleek, modern products that look great in any home</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 16: NEXT STEPS ==================== -->
+  <div class="slide" data-slide="16">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
+      <div class="flex items-center gap-6 mb-8">
+        <img src="images/deako-logo.jpg" alt="Deako" class="h-10 rounded" onerror="this.style.display='none'">
+        <span class="text-3xl text-gray-600 font-light">+</span>
+        <img src="images/vivint-logo.png" alt="Vivint" class="h-10 rounded" onerror="this.style.display='none'">
+      </div>
+      <h2 class="text-5xl md:text-7xl font-black mb-8 leading-tight max-w-5xl">Let's get<br><span class="gradient-text">started</span></h2>
+      <div class="max-w-2xl w-full space-y-5 mb-10">
+        <div class="flex items-center gap-5 bg-gray-900 rounded-xl p-6 border border-gray-800">
+          <div class="icon-sm bg-blue-500/20 text-blue-400">1</div>
+          <p class="text-xl text-gray-300 text-left">Confirm product specifications and finalize pricing</p>
+        </div>
+        <div class="flex items-center gap-5 bg-gray-900 rounded-xl p-6 border border-gray-800">
+          <div class="icon-sm bg-blue-500/20 text-blue-400">2</div>
+          <p class="text-xl text-gray-300 text-left">Set up a model home with the full Deako + Vivint experience</p>
+        </div>
+        <div class="flex items-center gap-5 bg-gray-900 rounded-xl p-6 border border-gray-800">
+          <div class="icon-sm bg-blue-500/20 text-blue-400">3</div>
+          <p class="text-xl text-gray-300 text-left">Train your sales team on the new smart home offering</p>
+        </div>
+        <div class="flex items-center gap-5 bg-gradient-to-r from-green-900/20 to-gray-900 rounded-xl p-6 border border-green-800">
+          <div class="icon-sm bg-green-500/20 text-green-400">4</div>
+          <p class="text-xl text-green-300 text-left font-semibold">Roll out to Washington communities, then expand nationally</p>
+        </div>
+      </div>
+      <div class="bg-gray-900 rounded-2xl p-8 border border-gray-800 max-w-lg">
+        <p class="text-lg text-gray-400">Questions? Let's talk.</p>
+        <p class="text-xl text-white font-bold mt-2">Derek Richardson</p>
+        <p class="text-gray-400">CEO, Deako Smart Lighting</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let current = 1;
+    const total = document.querySelectorAll('.slide').length;
+
+    function showSlide(n) {
+      if (n < 1 || n > total) return;
+      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+      const slide = document.querySelector(`[data-slide="${n}"]`);
+      slide.classList.add('active');
+      slide.querySelector('.fade-in')?.classList.remove('fade-in');
+      void slide.querySelector('div')?.offsetWidth;
+      slide.querySelector('div')?.classList.add('fade-in');
+      current = n;
+      document.getElementById('slideCounter').textContent = `${current} / ${total}`;
+      document.getElementById('progressBar').style.width = `${(current / total) * 100}%`;
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+      if (e.key === 'Home') { e.preventDefault(); showSlide(1); }
+      if (e.key === 'End') { e.preventDefault(); showSlide(total); }
+    });
+
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', e => {
+      const diff = touchStartX - e.changedTouches[0].screenX;
+      if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
+    });
+
+    showSlide(1);
+  </script>
+
+  <!-- Screenshot Modal -->
+  <div class="screenshot-modal" id="screenshotModal" onclick="this.classList.remove('open')">
+    <img id="modalImg" src="">
+  </div>
+
+  <!-- Feedback Widget -->
+  <div class="feedback-btn" onclick="toggleFeedback()" title="Give feedback on this slide">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  </div>
+  <div class="feedback-panel" id="feedbackPanel">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <p style="font-weight:700;font-size:15px;color:white;margin:0;">Feedback</p>
+      <span style="font-size:12px;color:#6b7280;" id="feedbackSlideLabel">Slide 1</span>
+    </div>
+    <textarea id="feedbackInput" placeholder="What's working? What needs fixing? Be specific..."></textarea>
+    <div id="dropZone" class="drop-zone" onclick="document.getElementById('fileInput').click()">
+      <span id="dropLabel">Drop screenshot here or click to browse</span>
+      <img id="dropPreview" style="display:none;max-width:100%;max-height:120px;border-radius:6px;margin-top:4px;">
+    </div>
+    <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+    <button class="submit" onclick="submitFeedback()">Add Feedback for This Slide</button>
+    <div class="feedback-list" id="feedbackList"></div>
+    <div style="display:flex;gap:8px;margin-top:4px;">
+      <button onclick="exportFeedback()" style="flex:1;background:#1f2937;border:1px solid #374151;border-radius:8px;padding:8px;color:#9ca3af;font-size:12px;cursor:pointer;">Copy All Feedback</button>
+      <button onclick="clearFeedback()" style="flex:1;background:#1f2937;border:1px solid #374151;border-radius:8px;padding:8px;color:#9ca3af;font-size:12px;cursor:pointer;">Clear All</button>
+    </div>
+  </div>
+
+  <script>
+    let feedbackItems = JSON.parse(localStorage.getItem('risewell-feedback') || '[]');
+    let pendingScreenshot = null;
+
+    // Drop zone setup
+    const dropZone = document.getElementById('dropZone');
+    const dropPreview = document.getElementById('dropPreview');
+    const dropLabel = document.getElementById('dropLabel');
+
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('dragover'); });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) processImageFile(file);
+    });
+
+    // Also handle paste (Cmd+V) of screenshots
+    document.addEventListener('paste', (e) => {
+      const panel = document.getElementById('feedbackPanel');
+      if (!panel.classList.contains('open')) return;
+      const items = e.clipboardData.items;
+      for (let item of items) {
+        if (item.type.startsWith('image/')) {
+          e.preventDefault();
+          processImageFile(item.getAsFile());
+          break;
+        }
+      }
+    });
+
+    function handleFileSelect(e) {
+      const file = e.target.files[0];
+      if (file && file.type.startsWith('image/')) processImageFile(file);
+    }
+
+    function processImageFile(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        pendingScreenshot = e.target.result;
+        dropPreview.src = pendingScreenshot;
+        dropPreview.style.display = 'block';
+        dropLabel.textContent = 'Screenshot attached (click to change)';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearScreenshotPreview() {
+      pendingScreenshot = null;
+      dropPreview.style.display = 'none';
+      dropPreview.src = '';
+      dropLabel.textContent = 'Drop screenshot here or click to browse';
+      document.getElementById('fileInput').value = '';
+    }
+
+    function toggleFeedback() {
+      const panel = document.getElementById('feedbackPanel');
+      panel.classList.toggle('open');
+      document.getElementById('feedbackSlideLabel').textContent = `Slide ${current} of ${total}`;
+      renderFeedback();
+    }
+
+    function submitFeedback() {
+      const input = document.getElementById('feedbackInput');
+      const text = input.value.trim();
+      if (!text && !pendingScreenshot) return;
+      feedbackItems.push({
+        slide: current,
+        text: text || '(screenshot only)',
+        screenshot: pendingScreenshot || null,
+        status: 'open',
+        timestamp: new Date().toLocaleString()
+      });
+      localStorage.setItem('risewell-feedback', JSON.stringify(feedbackItems));
+      input.value = '';
+      clearScreenshotPreview();
+      renderFeedback();
+    }
+
+    function showScreenshot(src) {
+      const modal = document.getElementById('screenshotModal');
+      document.getElementById('modalImg').src = src;
+      modal.classList.add('open');
+    }
+
+    function renderFeedback() {
+      const list = document.getElementById('feedbackList');
+      if (feedbackItems.length === 0) {
+        list.innerHTML = '<p style="color:#6b7280;font-size:13px;text-align:center;padding:12px;">No feedback yet. Review each slide and note what needs fixing.</p>';
+        return;
+      }
+      list.innerHTML = feedbackItems.map((item, i) => `
+        <div class="feedback-item">
+          <div class="slide-label">Slide ${item.slide} &middot; ${item.timestamp}</div>
+          <div>${item.text}</div>
+          ${item.screenshot ? `<img class="feedback-screenshot" src="${item.screenshot}" onclick="showScreenshot(this.src)" title="Click to enlarge">` : ''}
+          <div class="status ${item.status}">
+            ${item.status === 'open' ? '● Open' : '● Fixed'}
+            <span onclick="toggleStatus(${i})" style="margin-left:8px;cursor:pointer;color:#6b7280;text-decoration:underline;">toggle</span>
+            <span onclick="removeFeedback(${i})" style="margin-left:8px;cursor:pointer;color:#6b7280;text-decoration:underline;">remove</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleStatus(i) {
+      feedbackItems[i].status = feedbackItems[i].status === 'open' ? 'fixed' : 'open';
+      localStorage.setItem('risewell-feedback', JSON.stringify(feedbackItems));
+      renderFeedback();
+    }
+
+    function removeFeedback(i) {
+      feedbackItems.splice(i, 1);
+      localStorage.setItem('risewell-feedback', JSON.stringify(feedbackItems));
+      renderFeedback();
+    }
+
+    function exportFeedback() {
+      const text = feedbackItems.map(item =>
+        `[Slide ${item.slide}] [${item.status.toUpperCase()}]${item.screenshot ? ' [HAS SCREENSHOT]' : ''} ${item.text}`
+      ).join('\n');
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Feedback copied to clipboard! Paste it into Claude to work through the items.\n\nFor items with screenshots, take a screenshot of the feedback panel showing the image and share it with Claude.');
+      });
+    }
+
+    function clearFeedback() {
+      if (confirm('Clear all feedback?')) {
+        feedbackItems = [];
+        localStorage.setItem('risewell-feedback', JSON.stringify(feedbackItems));
+        renderFeedback();
+      }
+    }
+
+    // Update slide label when changing slides
+    const origShowSlide = showSlide;
+    showSlide = function(n) {
+      origShowSlide(n);
+      const label = document.getElementById('feedbackSlideLabel');
+      if (label) label.textContent = `Slide ${current} of ${total}`;
+    };
+  </script>
+</body>
+</html>
