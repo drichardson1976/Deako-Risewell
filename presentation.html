@@ -78,7 +78,6 @@
     .browser-dot { width: 10px; height: 10px; border-radius: 50%; }
     .browser-url { background: white; border: 1px solid #e5e7eb; border-radius: 6px; padding: 4px 12px; font-size: 12px; color: #6b7280; flex: 1; margin-left: 8px; }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 </head>
 <body class="bg-white text-navy-900 overflow-hidden">
 
@@ -94,7 +93,11 @@
   </div>
 
   <!-- Version badge -->
-  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v38.8</div>
+  <!-- Fireworks canvas overlay -->
+  <canvas id="fireworksCanvas" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
+  <button id="fireworksBtn" onclick="launchFireworks()" title="Launch fireworks!" style="display:none;position:fixed;bottom:18px;right:62px;z-index:200;background:none;border:none;cursor:pointer;font-size:26px;filter:drop-shadow(0 0 4px rgba(255,120,0,0.7));transition:transform 0.15s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">🎆</button>
+
+  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v38.9</div>
 
   <!-- Progress bar -->
   <div class="fixed top-0 left-0 w-full h-1 bg-navy-100 z-50">
@@ -414,7 +417,7 @@
         <div class="bg-white rounded-2xl p-8 border border-navy-200 shadow-sm cost-new">
           <p class="text-navy-700 font-bold text-sm tracking-widest uppercase mb-4">Deako + Vivint</p>
           <div class="h-48 flex items-center justify-center mb-6 bg-gray-50 rounded-xl p-4">
-            <img src="images/vivint-lock-keypad.jpg" alt="Vivint Lock" class="product-img-lg" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🔒</div>'">
+            <img src="images/vivint-lock-keypad.jpg" alt="Vivint Lock" class="product-img-lg" style="height:200px;width:auto;" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🔒</div>'">
           </div>
           <p class="text-2xl font-bold text-navy-700">Vivint Smart Lock</p>
           <p class="text-gray-400 text-sm mt-2 mb-4">Model: Kwikset 888 SmartCode (Z-Wave)</p>
@@ -734,7 +737,41 @@
   </div>
 
   <!-- ==================== SLIDE 17: NEXT STEPS ==================== -->
+  <!-- ==================== SLIDE 16: WHY SWITCH - SUMMARY ==================== -->
   <div class="slide" data-slide="15">
+    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in py-6">
+      <p class="text-orange-400 font-semibold text-sm tracking-widest uppercase mb-3 mt-8">The Case for Change</p>
+      <h2 class="text-4xl md:text-5xl font-bold mb-6 text-navy-700">Why make the switch?</h2>
+      <div class="max-w-3xl w-full space-y-3">
+        <div class="flex items-center gap-5 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+          <div class="icon-sm bg-orange-100 text-orange-600">$</div>
+          <p class="text-lg text-gray-600 text-left"><span class="text-navy-700 font-bold">Save $290 per home</span> — more products at a lower cost than what you pay today</p>
+        </div>
+        <div class="flex items-center gap-5 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+          <div class="icon-sm bg-orange-100 text-orange-600">1</div>
+          <p class="text-lg text-gray-600 text-left"><span class="text-navy-700 font-bold">One vendor relationship</span> — Deako manages everything, replacing 5 separate vendors</p>
+        </div>
+        <div class="flex items-center gap-5 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+          <div class="icon-sm bg-orange-100 text-orange-600">+</div>
+          <p class="text-lg text-gray-600 text-left"><span class="text-navy-700 font-bold">Better homebuyer experience</span> — white glove installation, one app, no DIY setup</p>
+        </div>
+        <div class="flex items-center gap-5 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+          <div class="icon-sm bg-navy-100 text-navy-700">🔒</div>
+          <p class="text-lg text-gray-600 text-left"><span class="text-navy-700 font-bold">Security capability</span> — something you can't offer your buyers today</p>
+        </div>
+        <div class="flex items-center gap-5 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+          <div class="icon-sm bg-navy-100 text-navy-700">↗</div>
+          <p class="text-lg text-gray-600 text-left"><span class="text-navy-700 font-bold">Expandable platform</span> — cameras, sensors, monitoring — buyers can grow their system over time</p>
+        </div>
+        <div class="flex items-center gap-5 bg-orange-50 rounded-xl p-4 border border-orange-200 shadow-sm">
+          <div class="icon-sm bg-orange-200 text-orange-700">★</div>
+          <p class="text-lg text-navy-700 text-left font-semibold">Sleek, modern products that look great in any home</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" data-slide="16">
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in bg-navy-700 py-4" style="position:relative;">
       <div style="background:white;border-radius:10px;padding:6px 16px;display:inline-flex;align-items:center;margin-bottom:1rem;">
         <img src="images/risewell-logo.jpg" alt="Risewell" class="h-10" onerror="this.style.display='none'">
@@ -769,12 +806,11 @@
         <span style="color:#9ca3af;font-size:18px;font-weight:300;">+</span>
         <img src="images/vivint-logo-house.svg" alt="Vivint" class="h-7" onerror="this.style.display='none'">
       </div>
-      <button onclick="launchFireworks()" title="Celebrate!" style="position:absolute;bottom:14px;right:18px;background:none;border:none;cursor:pointer;font-size:22px;opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">🎆</button>
     </div>
   </div>
 
   <!-- ==================== SLIDE 19: APPENDIX ==================== -->
-  <div class="slide" data-slide="16">
+  <div class="slide" data-slide="17">
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in bg-navy-700">
       <p class="text-orange-400 font-semibold text-sm tracking-widest uppercase mb-6">Additional Detail</p>
       <h2 class="text-5xl md:text-7xl font-bold text-white">Appendix</h2>
@@ -782,7 +818,7 @@
   </div>
 
   <!-- ==================== SLIDE 20: BONUS - WHAT ELSE IS INCLUDED ==================== -->
-  <div class="slide" data-slide="17">
+  <div class="slide" data-slide="18">
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
       <p class="text-orange-400 font-semibold text-sm tracking-widest uppercase mb-6">Also Included</p>
       <h2 class="text-4xl md:text-6xl font-bold mb-10 leading-tight max-w-5xl text-navy-700">Bonus — <span class="text-orange-400">at no extra cost</span></h2>
@@ -820,7 +856,7 @@
   </div>
 
   <!-- ==================== SLIDE 20: DEAKO SMART LIGHTING ==================== -->
-  <div class="slide" data-slide="18">
+  <div class="slide" data-slide="19">
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in py-4">
       <p class="text-orange-400 font-semibold text-sm tracking-widest uppercase mb-2 mt-2">Already in Every Risewell Home</p>
       <h2 class="text-3xl md:text-5xl font-bold mb-4 text-navy-700">Deako Smart Lighting</h2>
@@ -863,7 +899,7 @@
   </div>
 
   <!-- ==================== SLIDE 21: ONE POINT OF CONTACT ==================== -->
-  <div class="slide" data-slide="19">
+  <div class="slide" data-slide="20">
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
       <p class="text-orange-400 font-semibold text-sm tracking-widest uppercase mb-6">For Your Team</p>
       <h2 class="text-4xl md:text-6xl font-bold mb-12 text-navy-700">Deako handles everything</h2>
@@ -896,39 +932,6 @@
     </div>
   </div>
 
-  <!-- ==================== SLIDE 16: WHY SWITCH - SUMMARY ==================== -->
-  <div class="slide" data-slide="20">
-    <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in py-6">
-      <p class="text-orange-400 font-semibold text-sm tracking-widest uppercase mb-3 mt-8">The Case for Change</p>
-      <h2 class="text-4xl md:text-5xl font-bold mb-6 text-navy-700">Why make the switch?</h2>
-      <div class="max-w-3xl w-full space-y-3">
-        <div class="flex items-center gap-5 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-          <div class="icon-sm bg-orange-100 text-orange-600">$</div>
-          <p class="text-lg text-gray-600 text-left"><span class="text-navy-700 font-bold">Save $290 per home</span> — more products at a lower cost than what you pay today</p>
-        </div>
-        <div class="flex items-center gap-5 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-          <div class="icon-sm bg-orange-100 text-orange-600">1</div>
-          <p class="text-lg text-gray-600 text-left"><span class="text-navy-700 font-bold">One vendor relationship</span> — Deako manages everything, replacing 5 separate vendors</p>
-        </div>
-        <div class="flex items-center gap-5 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-          <div class="icon-sm bg-orange-100 text-orange-600">+</div>
-          <p class="text-lg text-gray-600 text-left"><span class="text-navy-700 font-bold">Better homebuyer experience</span> — white glove installation, one app, no DIY setup</p>
-        </div>
-        <div class="flex items-center gap-5 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-          <div class="icon-sm bg-navy-100 text-navy-700">🔒</div>
-          <p class="text-lg text-gray-600 text-left"><span class="text-navy-700 font-bold">Security capability</span> — something you can't offer your buyers today</p>
-        </div>
-        <div class="flex items-center gap-5 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-          <div class="icon-sm bg-navy-100 text-navy-700">↗</div>
-          <p class="text-lg text-gray-600 text-left"><span class="text-navy-700 font-bold">Expandable platform</span> — cameras, sensors, monitoring — buyers can grow their system over time</p>
-        </div>
-        <div class="flex items-center gap-5 bg-orange-50 rounded-xl p-4 border border-orange-200 shadow-sm">
-          <div class="icon-sm bg-orange-200 text-orange-700">★</div>
-          <p class="text-lg text-navy-700 text-left font-semibold">Sleek, modern products that look great in any home</p>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <script>
     let current = 1;
@@ -944,6 +947,7 @@
       slide.querySelector('div')?.classList.add('fade-in');
       current = n;
       document.getElementById('slideCounter').textContent = `${current} / ${total}`;
+      _updateFireworksBtn();
       document.getElementById('progressBar').style.width = `${(current / total) * 100}%`;
     }
 
@@ -967,15 +971,71 @@
 
     showSlide(1);
 
+    // ── Fireworks ──────────────────────────────────────────────────────────────
+    var _fwActive = false, _fwParticles = [];
     function launchFireworks() {
-      var end = Date.now() + 2000;
-      var colors = ['#E87722', '#003B5C', '#ffffff'];
-      (function frame() {
-        confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: colors });
-        confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: colors });
-        if (Date.now() < end) requestAnimationFrame(frame);
-      }());
+      if (_fwActive) return;
+      _fwActive = true;
+      var canvas = document.getElementById('fireworksCanvas');
+      canvas.style.display = 'block';
+      canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+      var ctx = canvas.getContext('2d');
+      var colors = ['#E87722','#FF6B35','#003B5C','#ffffff','#FFD700','#FF4444','#44DDFF'];
+      _fwParticles = [];
+      var launches = 0, maxLaunches = 8;
+      function burst(x, y) {
+        var n = 80 + Math.random()*40;
+        for (var i = 0; i < n; i++) {
+          var angle = (Math.PI*2/n)*i + Math.random()*0.3;
+          var speed = 2 + Math.random()*5;
+          _fwParticles.push({
+            x:x, y:y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed - 2,
+            alpha:1, color: colors[Math.floor(Math.random()*colors.length)],
+            size: 2+Math.random()*3, decay: 0.013+Math.random()*0.007, tail:[]
+          });
+        }
+      }
+      function launchRocket() {
+        if (launches < maxLaunches) {
+          launches++;
+          var x = 0.15*window.innerWidth + Math.random()*0.7*window.innerWidth;
+          var y = 0.15*window.innerHeight + Math.random()*0.5*window.innerHeight;
+          setTimeout(function(cx,cy){return function(){burst(cx,cy);};}(x,y), 0);
+        }
+      }
+      for (var k = 0; k < maxLaunches; k++) { setTimeout(launchRocket, k*300 + Math.random()*200); }
+      function animate() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        var alive = false;
+        for (var i = 0; i < _fwParticles.length; i++) {
+          var p = _fwParticles[i];
+          if (p.alpha <= 0) continue;
+          alive = true;
+          p.tail.push({x:p.x,y:p.y,a:p.alpha});
+          if (p.tail.length > 5) p.tail.shift();
+          for (var t = 0; t < p.tail.length; t++) {
+            ctx.globalAlpha = p.tail[t].a * (t/p.tail.length) * 0.4;
+            ctx.fillStyle = p.color;
+            ctx.beginPath(); ctx.arc(p.tail[t].x, p.tail[t].y, p.size*0.6, 0, Math.PI*2);
+            ctx.fill();
+          }
+          ctx.globalAlpha = p.alpha;
+          ctx.fillStyle = p.color;
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+          ctx.globalAlpha = 1;
+          p.x += p.vx; p.y += p.vy; p.vy += 0.08; p.vx *= 0.98;
+          p.alpha -= p.decay;
+        }
+        if (alive) { requestAnimationFrame(animate); }
+        else { canvas.style.display='none'; _fwActive=false; _fwParticles=[]; }
+      }
+      animate();
     }
+    function _updateFireworksBtn() {
+      var btn = document.getElementById('fireworksBtn');
+      if (btn) btn.style.display = (current === 15) ? 'block' : 'none';
+    }
+
   </script>
 
   <!-- Screenshot Modal -->
