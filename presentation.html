@@ -102,7 +102,7 @@
   <!-- Fireworks canvas overlay -->
   <canvas id="fireworksCanvas" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
 
-  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v39.9</div>
+  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v40.0</div>
 
   <!-- Progress bar -->
   <div class="fixed top-0 left-0 w-full h-1 bg-navy-100 z-50">
@@ -301,42 +301,25 @@
           <p class="text-gray-400 text-sm">Thermostat</p>
           <p class="text-orange-400 text-xs mt-2 font-semibold">Vivint app</p>
         </div>
-        <div class="bg-white rounded-2xl p-7 border border-gray-200 text-center shadow-sm relative" id="garageCard">
-          <button onclick="cycleGarage(1)" style="position:absolute;top:4px;left:50%;transform:translateX(-50%);background:none;border:none;cursor:pointer;color:#003B5C;padding:2px;opacity:0.5;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
-          </button>
+        <div class="bg-white rounded-2xl p-7 border border-gray-200 text-center shadow-sm" id="garageCard" onclick="cycleGarage(1)" style="cursor:pointer;">
           <div class="garage-option" data-garage="0">
             <div class="h-44 flex items-center justify-center mb-4 bg-gray-50 rounded-xl p-3">
               <img src="images/liftmaster-2100l.jpg" alt="LiftMaster 2100L" class="w-full h-full object-cover rounded-lg" style="object-position:center 65%;" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🚗</div>'">
             </div>
-            <p class="text-lg font-bold text-navy-700 mb-1">Option 1: Keep LiftMaster</p>
-            <p class="text-gray-400 text-xs">No change</p>
-            <p class="text-gray-400 text-xs mt-2 font-semibold">myQ app</p>
+            <p class="text-lg font-bold text-navy-700 mb-1">Option 1: Vivint Integration</p>
+            <p class="text-gray-400 text-xs">LiftMaster + myQ → Vivint</p>
+            <p class="text-orange-400 text-xs mt-2 font-semibold">$50 one-time charge · Vivint app</p>
+            <p class="text-gray-400 text-xs mt-2" style="font-style:italic;">click to see option 2</p>
           </div>
           <div class="garage-option" data-garage="1" style="display:none;">
             <div class="h-44 flex items-center justify-center mb-4 bg-gray-50 rounded-xl p-3">
-              <img src="images/liftmaster-2100l.jpg" alt="LiftMaster 2100L" class="w-full h-full object-cover rounded-lg" style="object-position:center 65%;" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🚗</div>'">
-            </div>
-            <p class="text-lg font-bold text-navy-700 mb-1">Option 2: Vivint Integration</p>
-            <p class="text-gray-400 text-xs">LiftMaster + myQ → Vivint</p>
-            <p class="text-orange-400 text-xs mt-2 font-semibold">$50 one-time charge · Vivint app</p>
-          </div>
-          <div class="garage-option" data-garage="2" style="display:none;">
-            <div class="h-44 flex items-center justify-center mb-4 bg-gray-50 rounded-xl p-3">
               <img src="images/vivint-garage-controller.jpg" alt="Vivint Garage Controller" class="max-h-40 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🚗</div>'">
             </div>
-            <p class="text-lg font-bold text-navy-700 mb-1">Option 3: Vivint Controller</p>
+            <p class="text-lg font-bold text-navy-700 mb-1">Option 2: Vivint Controller</p>
             <p class="text-gray-400 text-xs">Replace LiftMaster entirely</p>
             <p class="text-orange-400 text-xs mt-2 font-semibold">Vivint app (free)</p>
             <p class="text-gray-400 text-xs mt-1" style="font-style:italic;">Cost savings + works with any lift</p>
-          </div>
-          <button onclick="cycleGarage(1)" style="position:absolute;bottom:4px;left:50%;transform:translateX(-50%);background:none;border:none;cursor:pointer;color:#003B5C;padding:2px;opacity:0.5;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div style="position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:4px;" id="garageDots">
-            <span style="width:6px;height:6px;border-radius:50%;background:#003B5C;" id="gDot0"></span>
-            <span style="width:6px;height:6px;border-radius:50%;background:#d1d5db;" id="gDot1"></span>
-            <span style="width:6px;height:6px;border-radius:50%;background:#d1d5db;" id="gDot2"></span>
+            <p class="text-gray-400 text-xs mt-1" style="font-style:italic;">click to see option 1</p>
           </div>
         </div>
         <div class="bg-white rounded-2xl p-7 border-2 border-navy-200 text-center shadow-sm">
@@ -1336,15 +1319,12 @@
       }
     }
 
-    // ========== GARAGE DOOR CAROUSEL ==========
+    // ========== GARAGE DOOR TOGGLE ==========
     let garageIdx = 0;
-    function cycleGarage(dir) {
+    function cycleGarage() {
       const options = document.querySelectorAll('.garage-option');
-      garageIdx = (garageIdx + dir + options.length) % options.length;
+      garageIdx = garageIdx === 0 ? 1 : 0;
       options.forEach((opt, i) => { opt.style.display = i === garageIdx ? 'block' : 'none'; });
-      for (let i = 0; i < 3; i++) {
-        document.getElementById('gDot' + i).style.background = i === garageIdx ? '#003B5C' : '#d1d5db';
-      }
     }
 
     // ========== INLINE TEXT EDITING ==========
