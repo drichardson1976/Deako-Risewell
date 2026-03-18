@@ -91,14 +91,15 @@
     <button onclick="nextSlide()" style="background:none;border:none;cursor:pointer;color:#E87722;display:flex;align-items:center;padding:2px;" onmouseover="this.style.color='#f5c842'" onmouseout="this.style.color='#E87722'">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
+    <span id="fireworksSep" style="display:none;width:1px;height:16px;background:rgba(232,165,48,0.3);flex-shrink:0;"></span>
+    <button id="fireworksBtn" onclick="launchFireworks()" title="Celebrate!" style="display:none;background:none;border:none;cursor:pointer;color:#E87722;width:26px;height:26px;border-radius:50%;align-items:center;justify-content:center;font-size:17px;padding:0;transition:background 0.15s;" onmouseover="this.style.background='rgba(232,119,34,0.25)'" onmouseout="this.style.background='none'">🎆</button>
   </div>
 
   <!-- Version badge -->
   <!-- Fireworks canvas overlay -->
   <canvas id="fireworksCanvas" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
-  <button id="fireworksBtn" onclick="launchFireworks()" title="Launch fireworks!" style="display:none;position:fixed;bottom:18px;right:62px;z-index:200;background:#E87722;border:none;border-radius:10px;cursor:pointer;padding:8px 14px;font-size:18px;color:white;font-family:Montserrat,sans-serif;font-weight:600;letter-spacing:0.04em;box-shadow:0 2px 12px rgba(232,119,34,0.5);transition:all 0.15s;" onmouseover="this.style.transform='scale(1.07)';this.style.background='#003B5C'" onmouseout="this.style.transform='scale(1)';this.style.background='#E87722'">🎆 Celebrate</button>
 
-  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v39.4</div>
+  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v39.5</div>
 
   <!-- Progress bar -->
   <div class="fixed top-0 left-0 w-full h-1 bg-navy-100 z-50">
@@ -140,7 +141,7 @@
         </div>
         <div class="bg-white rounded-2xl p-7 border border-gray-200 text-center shadow-sm">
           <div class="h-44 flex items-center justify-center mb-4 bg-gray-50 rounded-xl p-3">
-            <img src="images/kwikset-939.jpg" alt="Kwikset 939" class="max-h-40 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🔒</div>'">
+            <img src="images/kwikset-939.jpg" alt="Kwikset 939" class="max-h-32 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🔒</div>'">
           </div>
           <p class="text-xl font-bold text-navy-700 mb-1">Kwikset</p>
           <p class="text-gray-400 text-sm">Smart Lock</p>
@@ -1025,8 +1026,11 @@
       animate();
     }
     function _updateFireworksBtn() {
+      var show = (current === 15 || current === 16);
       var btn = document.getElementById('fireworksBtn');
-      if (btn) btn.style.display = (current === 16) ? 'block' : 'none';
+      var sep = document.getElementById('fireworksSep');
+      if (btn) btn.style.display = show ? 'flex' : 'none';
+      if (sep) sep.style.display = show ? 'inline-block' : 'none';
     }
 
   </script>
