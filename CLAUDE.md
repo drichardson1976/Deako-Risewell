@@ -8,9 +8,12 @@
 - Always `git pull` before starting work to pick up Eric's changes
 - Always `git push` after each set of changes
 - Don't flag or worry about Eric's changes — just merge and move on
-- Before editing presentation.html, read `edits.json` (if it exists) and apply any live edits Derek made in the browser first
+- Before editing presentation.html, read `edits.json` (if it exists) and apply any live edits first
+- After applying edits, clear `edits.json` back to `{}`
 - After any changes, always post the localhost link: `http://localhost:8080/presentation.html`
 - Start server if not running: `python3 server.py`
+- **"Apply edits and push"**: When Derek or Eric say this and there are no other Claude-driven changes, still read `edits.json`, apply to HTML, rev the version badge number in presentation.html, commit, and push
+- Version badge is in the HTML: `<div class="version-badge"...>vXX.X</div>` — increment the minor version on each push
 
 ## Risewell Brand Colors
 - Primary dark blue (navy): dominant color
