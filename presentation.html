@@ -11,8 +11,9 @@
       theme: {
         extend: {
           colors: {
-            navy: { 50: '#f0f3f8', 100: '#dce3ef', 200: '#b9c7df', 300: '#8da3c7', 400: '#5f7dac', 500: '#3d5d8f', 600: '#2d4a77', 700: '#1B365D', 800: '#162b4a', 900: '#111f37', 950: '#0a1322' },
-            gold: { 50: '#fdf8eb', 100: '#faedc6', 200: '#f5db8e', 300: '#f0c94f', 400: '#E8A530', 500: '#d4911a', 600: '#b07213', 700: '#8a5612', 800: '#724516', 900: '#5f3a16' },
+            navy: { 50: '#f0f4f7', 100: '#d6e2ea', 200: '#a8bfd0', 300: '#7a9bb5', 400: '#4d7899', 500: '#1a5f84', 600: '#0e4d6e', 700: '#003B5C', 800: '#002f49', 900: '#002337', 950: '#001524' },
+            orange: { 50: '#fef5ec', 100: '#fde6d0', 200: '#fbcda0', 300: '#f9ae66', 400: '#E87722', 500: '#d4651a', 600: '#b35013', 700: '#8a3d12', 800: '#6e3110', 900: '#5a2910' },
+            teal: { 50: '#edf7fb', 100: '#d0ecf5', 200: '#a1d9eb', 300: '#5fbdd8', 400: '#0082B4', 500: '#006e99', 600: '#005a7e', 700: '#004863', 800: '#003a50', 900: '#002f42' },
           }
         }
       }
@@ -24,8 +25,8 @@
     .slide.active { display: flex; }
     .fade-in { animation: fadeIn 0.5s ease-in; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .gradient-text { background: linear-gradient(135deg, #E8A530, #1B365D); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .gradient-text-gold { background: linear-gradient(135deg, #E8A530, #F5B731); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .gradient-text { background: linear-gradient(135deg, #E87722, #003B5C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .gradient-text-gold { background: linear-gradient(135deg, #E87722, #F59522); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .slide-counter { font-variant-numeric: tabular-nums; }
     .icon-circle { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; }
     .icon-sm { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
@@ -33,28 +34,28 @@
     .product-img-lg { max-height: 200px; object-fit: contain; border-radius: 8px; }
     .savings-highlight { background: linear-gradient(135deg, rgba(27,54,93,0.08), rgba(232,165,48,0.08)); border: 1px solid rgba(232,165,48,0.3); }
     .cost-current { border-left: 4px solid #dc2626; }
-    .cost-new { border-left: 4px solid #1B365D; }
+    .cost-new { border-left: 4px solid #003B5C; }
     .step-line { position: relative; }
     .step-line::before { content: ''; position: absolute; left: 19px; top: 48px; bottom: -24px; width: 2px; background: #e5e7eb; }
     .step-line:last-child::before { display: none; }
     /* Feedback panel */
-    .feedback-btn { position: fixed; bottom: 8px; right: 8px; z-index: 60; background: #1B365D; border: 1px solid #2d4a77; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #E8A530; font-size: 18px; transition: all 0.2s; }
+    .feedback-btn { position: fixed; bottom: 8px; right: 8px; z-index: 60; background: #003B5C; border: 1px solid #2d4a77; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #E87722; font-size: 18px; transition: all 0.2s; }
     .feedback-btn:hover { background: #2d4a77; }
     .feedback-panel { position: fixed; bottom: 56px; right: 8px; z-index: 60; width: 340px; max-height: 70vh; background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; display: none; flex-direction: column; gap: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); }
     .feedback-panel.open { display: flex; }
     .feedback-panel textarea { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; color: #1A2640; font-size: 14px; resize: vertical; min-height: 80px; font-family: 'Poppins', sans-serif; }
-    .feedback-panel textarea:focus { outline: none; border-color: #E8A530; }
-    .feedback-panel button.submit { background: linear-gradient(135deg, #1B365D, #2d4a77); border: none; border-radius: 8px; padding: 10px; color: white; font-weight: 600; cursor: pointer; font-size: 14px; }
+    .feedback-panel textarea:focus { outline: none; border-color: #E87722; }
+    .feedback-panel button.submit { background: linear-gradient(135deg, #003B5C, #2d4a77); border: none; border-radius: 8px; padding: 10px; color: white; font-weight: 600; cursor: pointer; font-size: 14px; }
     .feedback-panel button.submit:hover { opacity: 0.9; }
     .feedback-list { overflow-y: auto; max-height: 40vh; display: flex; flex-direction: column; gap: 8px; }
     .feedback-item { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; font-size: 13px; color: #374151; }
-    .feedback-item .slide-label { color: #E8A530; font-weight: 600; font-size: 12px; margin-bottom: 4px; }
+    .feedback-item .slide-label { color: #E87722; font-weight: 600; font-size: 12px; margin-bottom: 4px; }
     .feedback-item .status { font-size: 11px; margin-top: 4px; }
-    .feedback-item .status.open { color: #E8A530; }
+    .feedback-item .status.open { color: #E87722; }
     .feedback-item .status.fixed { color: #16a34a; }
     .feedback-item img.feedback-screenshot { max-width: 100%; max-height: 100px; border-radius: 6px; margin-top: 6px; cursor: pointer; }
     .drop-zone { background: #f9fafb; border: 2px dashed #e5e7eb; border-radius: 8px; padding: 12px; text-align: center; color: #9ca3af; font-size: 13px; cursor: pointer; transition: all 0.2s; }
-    .drop-zone.dragover { border-color: #E8A530; background: rgba(232,165,48,0.05); color: #E8A530; }
+    .drop-zone.dragover { border-color: #E87722; background: rgba(232,165,48,0.05); color: #E87722; }
     .drop-zone:hover { border-color: #d1d5db; }
     .screenshot-modal { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
     .screenshot-modal.open { display: flex; }
@@ -70,18 +71,18 @@
 
   <!-- Navigation -->
   <div style="position:fixed;top:16px;right:16px;z-index:50;display:flex;align-items:center;gap:8px;background:rgba(27,54,93,0.92);backdrop-filter:blur(4px);border:1px solid rgba(232,165,48,0.3);border-radius:999px;padding:6px 14px;box-shadow:0 4px 20px rgba(0,0,0,0.25);">
-    <button onclick="prevSlide()" style="background:none;border:none;cursor:pointer;color:#E8A530;display:flex;align-items:center;padding:2px;" onmouseover="this.style.color='#f5c842'" onmouseout="this.style.color='#E8A530'">
+    <button onclick="prevSlide()" style="background:none;border:none;cursor:pointer;color:#E87722;display:flex;align-items:center;padding:2px;" onmouseover="this.style.color='#f5c842'" onmouseout="this.style.color='#E87722'">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
-    <span class="slide-counter" id="slideCounter" style="color:#E8A530;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;min-width:42px;text-align:center;">1 / 17</span>
-    <button onclick="nextSlide()" style="background:none;border:none;cursor:pointer;color:#E8A530;display:flex;align-items:center;padding:2px;" onmouseover="this.style.color='#f5c842'" onmouseout="this.style.color='#E8A530'">
+    <span class="slide-counter" id="slideCounter" style="color:#E87722;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;min-width:42px;text-align:center;">1 / 17</span>
+    <button onclick="nextSlide()" style="background:none;border:none;cursor:pointer;color:#E87722;display:flex;align-items:center;padding:2px;" onmouseover="this.style.color='#f5c842'" onmouseout="this.style.color='#E87722'">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
   </div>
 
   <!-- Progress bar -->
   <div class="fixed top-0 left-0 w-full h-1 bg-navy-100 z-50">
-    <div id="progressBar" class="h-full bg-gradient-to-r from-gold-400 to-navy-700 transition-all duration-500" style="width: 6%"></div>
+    <div id="progressBar" class="h-full bg-gradient-to-r from-orange-400 to-navy-700 transition-all duration-500" style="width: 6%"></div>
   </div>
 
   <!-- ==================== SLIDE 1: TITLE ==================== -->
@@ -92,7 +93,7 @@
           <img src="images/risewell-logo.jpg" alt="Risewell" class="h-14" onerror="this.style.display='none'">
         </div>
       </div>
-      <h1 class="text-5xl md:text-7xl font-black mb-6 text-white leading-tight">A Smarter Home<br><span class="text-gold-400">for Risewell</span></h1>
+      <h1 class="text-5xl md:text-7xl font-black mb-6 text-white leading-tight">A Smarter Home<br><span class="text-orange-400">for Risewell</span></h1>
       <p class="text-xl md:text-2xl text-navy-200 font-light mb-4">One integrated smart home solution that saves money,</p>
       <p class="text-xl md:text-2xl text-white font-semibold mb-10">delights homebuyers, and simplifies your operations.</p>
       <div class="flex items-center gap-4 mb-10">
@@ -117,56 +118,51 @@
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
       <p class="text-red-500 font-semibold text-sm tracking-widest uppercase mb-4">Today's Reality</p>
       <h2 class="text-3xl md:text-5xl font-bold mb-6 leading-tight max-w-5xl text-navy-700">Five vendors. Five apps. Five support lines.<br><span class="text-red-500">No one throat to choke.</span></h2>
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-5xl mt-2">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-5 max-w-6xl mt-2">
         <div class="bg-white rounded-2xl p-5 border border-gray-200 text-center shadow-sm">
-          <div class="h-28 flex items-center justify-center mb-3 bg-gray-50 rounded-xl p-3">
-            <img src="images/ring-pro2.jpg" alt="Ring Pro2" class="max-h-24 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-4xl\'>🔔</div>'">
+          <div class="h-36 flex items-center justify-center mb-3 bg-gray-50 rounded-xl p-3">
+            <img src="images/ring-pro2.jpg" alt="Ring Pro2" class="max-h-32 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🔔</div>'">
           </div>
-          <p class="text-base font-bold text-navy-700 mb-1">Ring</p>
-          <p class="text-gray-400 text-xs mb-2">Doorbell</p>
-          <p class="text-red-500 text-lg font-bold">$275</p>
-          <p class="text-gray-400 text-xs mt-1">Ring app</p>
+          <p class="text-lg font-bold text-navy-700 mb-1">Ring</p>
+          <p class="text-gray-400 text-sm">Doorbell</p>
+          <p class="text-gray-400 text-xs mt-2">Ring app</p>
         </div>
         <div class="bg-white rounded-2xl p-5 border border-gray-200 text-center shadow-sm">
-          <div class="h-28 flex items-center justify-center mb-3 bg-gray-50 rounded-xl p-3">
-            <img src="images/kwikset-939.jpg" alt="Kwikset 939" class="max-h-24 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-4xl\'>🔒</div>'">
+          <div class="h-36 flex items-center justify-center mb-3 bg-gray-50 rounded-xl p-3">
+            <img src="images/kwikset-939.jpg" alt="Kwikset 939" class="max-h-32 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🔒</div>'">
           </div>
-          <p class="text-base font-bold text-navy-700 mb-1">Kwikset</p>
-          <p class="text-gray-400 text-xs mb-2">Smart Lock</p>
-          <p class="text-red-500 text-lg font-bold">$200</p>
-          <p class="text-gray-400 text-xs mt-1">Kwikset app</p>
+          <p class="text-lg font-bold text-navy-700 mb-1">Kwikset</p>
+          <p class="text-gray-400 text-sm">Smart Lock</p>
+          <p class="text-gray-400 text-xs mt-2">Kwikset app</p>
         </div>
         <div class="bg-white rounded-2xl p-5 border border-gray-200 text-center shadow-sm">
-          <div class="h-28 flex items-center justify-center mb-3 bg-gray-50 rounded-xl p-3">
-            <img src="images/honeywell-t6.jpg" alt="Honeywell T6" class="max-h-24 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-4xl\'>🌡️</div>'">
+          <div class="h-36 flex items-center justify-center mb-3 bg-gray-50 rounded-xl p-3">
+            <img src="images/honeywell-t6.jpg" alt="Honeywell T6" class="max-h-32 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🌡️</div>'">
           </div>
-          <p class="text-base font-bold text-navy-700 mb-1">Honeywell</p>
-          <p class="text-gray-400 text-xs mb-2">Thermostat</p>
-          <p class="text-red-500 text-lg font-bold">$115</p>
-          <p class="text-gray-400 text-xs mt-1">Honeywell app</p>
+          <p class="text-lg font-bold text-navy-700 mb-1">Honeywell</p>
+          <p class="text-gray-400 text-sm">Thermostat</p>
+          <p class="text-gray-400 text-xs mt-2">Honeywell app</p>
         </div>
         <div class="bg-white rounded-2xl p-5 border border-gray-200 text-center shadow-sm">
-          <div class="h-28 flex items-center justify-center mb-3 bg-gray-50 rounded-xl p-3">
-            <img src="images/liftmaster-2100l.jpg" alt="LiftMaster 2100L" class="max-h-24 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-4xl\'>🚗</div>'">
+          <div class="h-36 flex items-center justify-center mb-3 bg-gray-50 rounded-xl p-3">
+            <img src="images/liftmaster-2100l.jpg" alt="LiftMaster 2100L" class="max-h-32 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🚗</div>'">
           </div>
-          <p class="text-base font-bold text-navy-700 mb-1">LiftMaster</p>
-          <p class="text-gray-400 text-xs mb-2">Garage Door</p>
-          <p class="text-gray-400 text-lg font-bold">—</p>
-          <p class="text-gray-400 text-xs mt-1">myQ app</p>
+          <p class="text-lg font-bold text-navy-700 mb-1">LiftMaster</p>
+          <p class="text-gray-400 text-sm">Garage Door</p>
+          <p class="text-gray-400 text-xs mt-2">myQ app</p>
         </div>
         <div class="bg-white rounded-2xl p-5 border border-gray-200 text-center shadow-sm">
-          <div class="h-28 flex items-center justify-center mb-3 bg-gray-50 rounded-xl p-3">
-            <img src="images/deako-switches-bundle.jpg" alt="Deako Switches" class="max-h-24 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-4xl\'>💡</div>'">
+          <div class="h-36 flex items-center justify-center mb-3 bg-gray-50 rounded-xl p-3">
+            <img src="images/deako-switch-faceplate.jpg" alt="Deako Switch" class="max-h-32 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>💡</div>'">
           </div>
-          <p class="text-base font-bold text-navy-700 mb-1">Deako</p>
-          <p class="text-gray-400 text-xs mb-2">40 Switches</p>
-          <p class="text-gray-400 text-lg font-bold">—</p>
-          <p class="text-gray-400 text-xs mt-1">Deako app</p>
+          <p class="text-lg font-bold text-navy-700 mb-1">Deako</p>
+          <p class="text-gray-400 text-sm">40 Switches</p>
+          <p class="text-gray-400 text-xs mt-2">Deako app</p>
         </div>
       </div>
       <div class="mt-6 bg-red-50 rounded-xl px-8 py-5 border border-red-200 max-w-4xl">
         <p class="text-xl font-bold text-red-600">5 vendors &middot; 5 apps &middot; 5 support channels &middot; 5 relationships to manage</p>
-        <p class="text-gray-500 mt-2">No security. No monitoring. No professional installation. Homebuyers set up everything themselves.</p>
+        <p class="text-gray-500 mt-2">No security. No professional monitoring options. No professional installation. Homebuyers set up everything themselves.</p>
       </div>
     </div>
   </div>
@@ -212,12 +208,12 @@
   <!-- ==================== SLIDE 4: THE SOLUTION ==================== -->
   <div class="slide" data-slide="4">
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in bg-navy-700">
-      <p class="text-gold-400 font-semibold text-sm tracking-widest uppercase mb-6">The Solution</p>
-      <h2 class="text-4xl md:text-7xl font-bold mb-10 leading-tight max-w-5xl text-white">One partner.<br>One platform.<br><span class="text-gold-400">One call.</span></h2>
+      <p class="text-orange-400 font-semibold text-sm tracking-widest uppercase mb-6">The Solution</p>
+      <h2 class="text-4xl md:text-7xl font-bold mb-10 leading-tight max-w-5xl text-white">One partner.<br>One platform.<br><span class="text-orange-400">One call.</span></h2>
       <div class="bg-navy-800 rounded-2xl p-10 border border-navy-600 max-w-3xl">
         <p class="text-xl text-navy-100 leading-relaxed">Deako and Vivint have partnered to deliver a complete, integrated smart home solution purpose-built for new construction.</p>
         <p class="text-lg text-navy-300 mt-6">You already trust Deako for smart lighting in every home. Now that same relationship gives you a full smart home platform — doorbell, lock, thermostat, and security — at a lower cost than what you're paying today.</p>
-        <p class="text-lg text-gold-400 font-semibold mt-6">Deako is your single point of contact for everything.</p>
+        <p class="text-lg text-orange-400 font-semibold mt-6">Deako is your single point of contact for everything.</p>
       </div>
     </div>
   </div>
@@ -256,7 +252,7 @@
             <p class="text-gray-600"><span class="text-gray-400 w-24 inline-block">FOV:</span> 180° x 180°</p>
             <p class="text-gray-600"><span class="text-gray-400 w-24 inline-block">Wi-Fi:</span> 2.4/5 GHz</p>
           </div>
-          <p class="text-gold-400 text-3xl font-bold mt-6">Included</p>
+          <p class="text-orange-400 text-3xl font-bold mt-6">Included</p>
         </div>
       </div>
       <p class="text-gray-500 mt-4 text-lg">Vivint doorbell is <span class="text-navy-700 font-semibold">slimmer</span> (1.5" vs 1.90" wide) with a <span class="text-navy-700 font-semibold">wider field of view</span> (180° vs 150°)</p>
@@ -297,7 +293,7 @@
             <p class="text-gray-600"><span class="text-gray-400 w-24 inline-block">Connect:</span> Z-Wave (via panel)</p>
             <p class="text-gray-600"><span class="text-gray-400 w-24 inline-block">App:</span> Vivint app</p>
           </div>
-          <p class="text-gold-400 text-3xl font-bold mt-6">Included</p>
+          <p class="text-orange-400 text-3xl font-bold mt-6">Included</p>
         </div>
       </div>
       <p class="text-gray-500 mt-4 text-lg">Vivint lock is <span class="text-navy-700 font-semibold">more compact</span> (4.59" vs 5.6" tall) and integrates directly with the Vivint smart home panel</p>
@@ -338,7 +334,7 @@
             <p class="text-gray-600"><span class="text-gray-400 w-24 inline-block">Power:</span> 4 AA or 24VAC</p>
             <p class="text-gray-600"><span class="text-gray-400 w-24 inline-block">App:</span> Vivint app</p>
           </div>
-          <p class="text-gold-400 text-3xl font-bold mt-6">Included</p>
+          <p class="text-orange-400 text-3xl font-bold mt-6">Included</p>
         </div>
       </div>
       <p class="text-gray-500 mt-4 text-lg">Vivint Element is <span class="text-navy-700 font-semibold">thinner</span> (0.94" vs 1.16" deep) with proximity and ambient light sensors built in</p>
@@ -348,8 +344,8 @@
   <!-- ==================== SLIDE 8: BONUS - WHAT ELSE IS INCLUDED ==================== -->
   <div class="slide" data-slide="8">
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
-      <p class="text-gold-400 font-semibold text-sm tracking-widest uppercase mb-6">Included at No Extra Cost</p>
-      <h2 class="text-4xl md:text-6xl font-bold mb-10 leading-tight max-w-5xl text-navy-700">You also get these<br><span class="text-gold-400">at no additional cost</span></h2>
+      <p class="text-orange-400 font-semibold text-sm tracking-widest uppercase mb-6">Included at No Extra Cost</p>
+      <h2 class="text-4xl md:text-6xl font-bold mb-10 leading-tight max-w-5xl text-navy-700">You also get these<br><span class="text-orange-400">at no additional cost</span></h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
         <div class="bg-white rounded-2xl p-8 border border-gray-200 flex items-start gap-5 shadow-sm">
           <img src="images/vivint-smart-hub.jpg" alt="Vivint Smart Hub" style="width:80px;height:80px;object-fit:contain;border-radius:10px;flex-shrink:0;background:#f9fafb;">
@@ -366,7 +362,7 @@
           </div>
         </div>
         <div class="bg-white rounded-2xl p-8 border border-gray-200 flex items-start gap-5 shadow-sm">
-          <div class="icon-circle bg-gold-100 text-gold-600 flex-shrink-0">+</div>
+          <div class="icon-circle bg-orange-100 text-orange-600 flex-shrink-0">+</div>
           <div class="text-left">
             <p class="text-xl font-bold text-navy-700">Vivint App</p>
             <p class="text-gray-500">One unified app to control doorbell, lock, thermostat, and any future devices.</p>
@@ -387,7 +383,7 @@
   <!-- ==================== SLIDE 9: THE SAVINGS ==================== -->
   <div class="slide" data-slide="9">
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
-      <p class="text-gold-400 font-semibold text-sm tracking-widest uppercase mb-6">The Bottom Line</p>
+      <p class="text-orange-400 font-semibold text-sm tracking-widest uppercase mb-6">The Bottom Line</p>
       <h2 class="text-4xl md:text-6xl font-bold mb-12 text-navy-700">More product. Less cost.</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full mb-10">
         <div class="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm cost-current">
@@ -429,26 +425,26 @@
   <!-- ==================== SLIDE 10: SCALE THE SAVINGS ==================== -->
   <div class="slide" data-slide="10">
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in bg-navy-700">
-      <p class="text-gold-400 font-semibold text-sm tracking-widest uppercase mb-6">At Scale</p>
+      <p class="text-orange-400 font-semibold text-sm tracking-widest uppercase mb-6">At Scale</p>
       <h2 class="text-4xl md:text-6xl font-bold mb-12 text-white">What $290/home looks like<br>across your communities</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mb-10">
         <div class="bg-navy-800 rounded-2xl p-8 border border-navy-600">
           <p class="text-navy-300 text-sm uppercase tracking-widest mb-3">Liberty View, Bothell</p>
           <p class="text-lg text-navy-200 mb-2">23 homes</p>
-          <p class="text-3xl font-black text-gold-400">$6,670</p>
+          <p class="text-3xl font-black text-orange-400">$6,670</p>
           <p class="text-navy-400 text-sm mt-2">in savings</p>
         </div>
         <div class="bg-navy-800 rounded-2xl p-8 border border-navy-600">
           <p class="text-navy-300 text-sm uppercase tracking-widest mb-3">Pine Ranch, Cle Elum</p>
           <p class="text-lg text-navy-200 mb-2">1,300 homes</p>
-          <p class="text-3xl font-black text-gold-400">$377,000</p>
+          <p class="text-3xl font-black text-orange-400">$377,000</p>
           <p class="text-navy-400 text-sm mt-2">in savings</p>
         </div>
-        <div class="bg-gradient-to-b from-gold-400/20 to-navy-800 rounded-2xl p-8 border border-gold-400/30">
+        <div class="bg-gradient-to-b from-orange-400/20 to-navy-800 rounded-2xl p-8 border border-orange-400/30">
           <p class="text-navy-300 text-sm uppercase tracking-widest mb-3">Risewell National</p>
           <p class="text-lg text-navy-200 mb-2">~4,000 homes/year</p>
-          <p class="text-4xl font-black text-gold-400">$1.16M</p>
-          <p class="text-gold-400 text-sm mt-2 font-semibold">per year in savings</p>
+          <p class="text-4xl font-black text-orange-400">$1.16M</p>
+          <p class="text-orange-400 text-sm mt-2 font-semibold">per year in savings</p>
         </div>
       </div>
       <p class="text-navy-300 text-lg max-w-3xl">These savings are on top of giving every homebuyer a better product, better experience, and professional installation.</p>
@@ -483,14 +479,14 @@
           </div>
         </div>
         <div class="flex items-start gap-5 step-line">
-          <div class="icon-circle bg-gold-100 text-gold-600">4</div>
+          <div class="icon-circle bg-orange-100 text-orange-600">4</div>
           <div class="text-left">
             <p class="text-xl font-semibold text-navy-700">Vivint installs everything</p>
             <p class="text-gray-500">A Vivint technician comes to the home and professionally installs and configures the complete system. The homeowner doesn't lift a finger.</p>
           </div>
         </div>
         <div class="flex items-start gap-5">
-          <div class="icon-circle bg-gold-100 text-gold-600">5</div>
+          <div class="icon-circle bg-orange-100 text-orange-600">5</div>
           <div class="text-left">
             <p class="text-xl font-semibold text-navy-700">Ongoing support</p>
             <p class="text-gray-500">Vivint handles all warranty and support for Vivint products. Deako handles all warranty and support for Deako products. The builder is hands-off.</p>
@@ -503,40 +499,40 @@
   <!-- ==================== SLIDE 12: DEAKO SMART LIGHTING ==================== -->
   <div class="slide" data-slide="12">
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in py-4">
-      <p class="text-gold-400 font-semibold text-sm tracking-widest uppercase mb-2 mt-2">Already in Every Risewell Home</p>
+      <p class="text-orange-400 font-semibold text-sm tracking-widest uppercase mb-2 mt-2">Already in Every Risewell Home</p>
       <h2 class="text-3xl md:text-5xl font-bold mb-4 text-navy-700">Deako Smart Lighting</h2>
       <p class="text-base text-gray-500 mb-5 max-w-3xl">With ~40 Deako connectors already standard in every Risewell home, your buyers have a smart-home-ready lighting system from day one.</p>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-4xl w-full">
         <div class="bg-white rounded-2xl p-4 border border-gray-200 flex items-start gap-4 shadow-sm">
-          <div class="icon-sm bg-gold-100 text-gold-600 flex-shrink-0">1</div>
+          <div class="icon-sm bg-orange-100 text-orange-600 flex-shrink-0">1</div>
           <div class="text-left">
             <p class="text-base font-bold text-navy-700">Lighting Scenes</p>
             <p class="text-sm text-gray-500">One tap sets the mood — bedtime, dinner, movie night. Control any group of lights instantly.</p>
           </div>
         </div>
         <div class="bg-white rounded-2xl p-4 border border-gray-200 flex items-start gap-4 shadow-sm">
-          <div class="icon-sm bg-gold-100 text-gold-600 flex-shrink-0">2</div>
+          <div class="icon-sm bg-orange-100 text-orange-600 flex-shrink-0">2</div>
           <div class="text-left">
             <p class="text-base font-bold text-navy-700">Schedules</p>
             <p class="text-sm text-gray-500">Exterior lights on before sunset, off before sunrise. Automatic. Every day.</p>
           </div>
         </div>
         <div class="bg-white rounded-2xl p-4 border border-gray-200 flex items-start gap-4 shadow-sm">
-          <div class="icon-sm bg-gold-100 text-gold-600 flex-shrink-0">3</div>
+          <div class="icon-sm bg-orange-100 text-orange-600 flex-shrink-0">3</div>
           <div class="text-left">
             <p class="text-base font-bold text-navy-700">Timers</p>
             <p class="text-sm text-gray-500">Lights auto-off after a set time — perfect for bathrooms, closets, and garages.</p>
           </div>
         </div>
         <div class="bg-white rounded-2xl p-4 border border-gray-200 flex items-start gap-4 shadow-sm">
-          <div class="icon-sm bg-gold-100 text-gold-600 flex-shrink-0">4</div>
+          <div class="icon-sm bg-orange-100 text-orange-600 flex-shrink-0">4</div>
           <div class="text-left">
             <p class="text-base font-bold text-navy-700">Motion Sensors</p>
             <p class="text-sm text-gray-500">Lights come on automatically when you enter a room — hands-free, every time.</p>
           </div>
         </div>
       </div>
-      <div class="mt-4 mb-4 bg-gold-50 rounded-xl px-8 py-4 border border-gold-200 max-w-4xl w-full">
+      <div class="mt-4 mb-4 bg-orange-50 rounded-xl px-8 py-4 border border-orange-200 max-w-4xl w-full">
         <p class="text-lg text-navy-700 font-bold">Deako Standard: 5-pack of smart switches for $300</p>
         <p class="text-sm text-gray-500 mt-2">Homebuyers start with the included connectors plus the 5 smart switches and can snap in additional specialty switches anytime — no electrician needed, no rewiring, no risk.</p>
       </div>
@@ -585,10 +581,10 @@
           <p class="font-semibold text-navy-700 text-sm">Glass Break Sensor</p>
           <p class="text-gray-400 text-xs mt-1">$100</p>
         </div>
-        <div class="bg-white rounded-xl p-5 border border-gold-200 text-center shadow-sm bg-gold-50">
+        <div class="bg-white rounded-xl p-5 border border-orange-200 text-center shadow-sm bg-orange-50">
           <p class="text-2xl mb-2">💡</p>
           <p class="font-semibold text-navy-700 text-sm">Deako Smart Switches</p>
-          <p class="text-gold-600 text-xs mt-1 font-semibold">5-pack: $300 &nbsp;·&nbsp; 10-pack: $600 &nbsp;·&nbsp; 25-pack: $1,500</p>
+          <p class="text-orange-600 text-xs mt-1 font-semibold">5-pack: $300 &nbsp;·&nbsp; 10-pack: $600 &nbsp;·&nbsp; 25-pack: $1,500</p>
         </div>
       </div>
       <p class="text-gray-400 text-base mt-8">Professional monitoring available from <span class="text-navy-700 font-semibold">$34.98/mo</span> with HomeProtect+ or <span class="text-navy-700 font-semibold">$54.99/mo</span> with HomeProtect Pro</p>
@@ -598,18 +594,18 @@
   <!-- ==================== SLIDE 14: ONE POINT OF CONTACT ==================== -->
   <div class="slide" data-slide="14">
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
-      <p class="text-gold-400 font-semibold text-sm tracking-widest uppercase mb-6">For Your Team</p>
+      <p class="text-orange-400 font-semibold text-sm tracking-widest uppercase mb-6">For Your Team</p>
       <h2 class="text-4xl md:text-6xl font-bold mb-12 text-navy-700">Deako handles everything</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
         <div class="bg-white rounded-2xl p-8 border border-gray-200 text-left shadow-sm">
-          <p class="text-gold-500 font-bold text-xl mb-5">What Deako Does</p>
+          <p class="text-orange-500 font-bold text-xl mb-5">What Deako Does</p>
           <ul class="space-y-4 text-gray-600 text-base">
-            <li class="flex items-start gap-3"><span class="text-gold-500 mt-0.5 font-bold">—</span> Single point of contact for your team</li>
-            <li class="flex items-start gap-3"><span class="text-gold-500 mt-0.5 font-bold">—</span> Outfits model homes & design centers</li>
-            <li class="flex items-start gap-3"><span class="text-gold-500 mt-0.5 font-bold">—</span> Trains your sales agents</li>
-            <li class="flex items-start gap-3"><span class="text-gold-500 mt-0.5 font-bold">—</span> Communicates with purchasing, construction, and electricians</li>
-            <li class="flex items-start gap-3"><span class="text-gold-500 mt-0.5 font-bold">—</span> Meets with every homebuyer before close</li>
-            <li class="flex items-start gap-3"><span class="text-gold-500 mt-0.5 font-bold">—</span> Handles all Deako warranty & support</li>
+            <li class="flex items-start gap-3"><span class="text-orange-500 mt-0.5 font-bold">—</span> Single point of contact for your team</li>
+            <li class="flex items-start gap-3"><span class="text-orange-500 mt-0.5 font-bold">—</span> Outfits model homes & design centers</li>
+            <li class="flex items-start gap-3"><span class="text-orange-500 mt-0.5 font-bold">—</span> Trains your sales agents</li>
+            <li class="flex items-start gap-3"><span class="text-orange-500 mt-0.5 font-bold">—</span> Communicates with purchasing, construction, and electricians</li>
+            <li class="flex items-start gap-3"><span class="text-orange-500 mt-0.5 font-bold">—</span> Meets with every homebuyer before close</li>
+            <li class="flex items-start gap-3"><span class="text-orange-500 mt-0.5 font-bold">—</span> Handles all Deako warranty & support</li>
           </ul>
         </div>
         <div class="bg-white rounded-2xl p-8 border border-gray-200 text-left shadow-sm">
@@ -635,7 +631,7 @@
   <!-- ==================== SLIDE 15: MOCKUP - RISEWELL.COM/SMARTHOME ==================== -->
   <div class="slide" data-slide="15">
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-6 fade-in">
-      <p class="text-gold-400 font-semibold text-sm tracking-widest uppercase mb-4">Vision: What Your Homebuyers See</p>
+      <p class="text-orange-400 font-semibold text-sm tracking-widest uppercase mb-4">Vision: What Your Homebuyers See</p>
       <h2 class="text-3xl md:text-4xl font-bold mb-6 text-navy-700">risewellhomes.com/smarthome</h2>
       <div class="browser-frame max-w-5xl w-full" style="max-height: 75vh; overflow-y: auto;">
         <div class="browser-bar">
@@ -651,18 +647,18 @@
           <div style="background:white;border-bottom:1px solid #e5e7eb;padding:10px 28px;display:flex;align-items:center;justify-content:space-between;">
             <img src="images/risewell-logo.jpg" alt="Risewell" style="height:24px;object-fit:contain;">
             <div style="display:flex;gap:20px;align-items:center;">
-              <span style="font-size:10px;font-weight:600;color:#1B365D;letter-spacing:0.08em;">FIND YOUR HOME</span>
-              <span style="font-size:10px;font-weight:600;color:#1B365D;letter-spacing:0.08em;">HOME FEATURES</span>
-              <span style="font-size:10px;font-weight:700;color:#E8A530;letter-spacing:0.08em;border-bottom:2px solid #E8A530;padding-bottom:1px;">SMART HOME</span>
-              <span style="font-size:10px;font-weight:600;color:#1B365D;letter-spacing:0.08em;">RESOURCES</span>
-              <span style="font-size:10px;font-weight:600;color:#1B365D;letter-spacing:0.08em;">BROKERS</span>
-              <span style="background:#1B365D;color:white;font-size:9px;font-weight:600;padding:5px 10px;border-radius:3px;">888-507-4427</span>
+              <span style="font-size:10px;font-weight:600;color:#003B5C;letter-spacing:0.08em;">FIND YOUR HOME</span>
+              <span style="font-size:10px;font-weight:600;color:#003B5C;letter-spacing:0.08em;">HOME FEATURES</span>
+              <span style="font-size:10px;font-weight:700;color:#E87722;letter-spacing:0.08em;border-bottom:2px solid #E87722;padding-bottom:1px;">SMART HOME</span>
+              <span style="font-size:10px;font-weight:600;color:#003B5C;letter-spacing:0.08em;">RESOURCES</span>
+              <span style="font-size:10px;font-weight:600;color:#003B5C;letter-spacing:0.08em;">BROKERS</span>
+              <span style="background:#003B5C;color:white;font-size:9px;font-weight:600;padding:5px 10px;border-radius:3px;">888-507-4427</span>
             </div>
           </div>
 
           <!-- Page header -->
           <div style="padding:28px 36px 20px;">
-            <h2 style="font-size:26px;font-weight:700;color:#1B365D;margin:0 0 10px;">Smart Home</h2>
+            <h2 style="font-size:26px;font-weight:700;color:#003B5C;margin:0 0 10px;">Smart Home</h2>
             <p style="font-size:12px;color:#4b5563;max-width:580px;line-height:1.7;margin:0 0 14px;">We believe your home should work for you the moment you walk through the door. Every Risewell home includes a professionally installed smart home system — connected, intuitive, and ready on move-in day.</p>
             <div style="display:flex;align-items:center;gap:10px;">
               <span style="font-size:10px;color:#9ca3af;font-weight:500;">Powered by</span>
@@ -678,17 +674,17 @@
               <div style="background:#f9fafb;border-radius:8px;height:160px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;overflow:hidden;">
                 <img src="images/vivint-doorbell.webp" alt="Doorbell" style="height:140px;width:auto;object-fit:contain;">
               </div>
-              <h3 style="font-size:16px;font-weight:700;color:#1B365D;margin:0 0 8px;">Smart Doorbell Camera</h3>
+              <h3 style="font-size:16px;font-weight:700;color:#003B5C;margin:0 0 8px;">Smart Doorbell Camera</h3>
               <p style="font-size:12px;color:#6b7280;line-height:1.6;margin:0 0 14px;">See who's at your door from anywhere. 1080p HDR video with a 180° field of view, included with every home.</p>
-              <span style="font-size:10px;font-weight:700;color:#1B365D;letter-spacing:0.1em;border-bottom:2px solid #1B365D;padding-bottom:2px;cursor:pointer;">LEARN MORE</span>
+              <span style="font-size:10px;font-weight:700;color:#003B5C;letter-spacing:0.1em;border-bottom:2px solid #003B5C;padding-bottom:2px;cursor:pointer;">LEARN MORE</span>
             </div>
             <div style="padding:28px 36px;">
               <div style="background:#f9fafb;border-radius:8px;height:160px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;overflow:hidden;">
                 <img src="images/vivint-lock.png" alt="Lock" style="height:140px;width:auto;object-fit:contain;">
               </div>
-              <h3 style="font-size:16px;font-weight:700;color:#1B365D;margin:0 0 8px;">Smart Lock</h3>
+              <h3 style="font-size:16px;font-weight:700;color:#003B5C;margin:0 0 8px;">Smart Lock</h3>
               <p style="font-size:12px;color:#6b7280;line-height:1.6;margin:0 0 14px;">Lock and unlock your front door from anywhere. Share digital keys with family and guests. Included with every home.</p>
-              <span style="font-size:10px;font-weight:700;color:#1B365D;letter-spacing:0.1em;border-bottom:2px solid #1B365D;padding-bottom:2px;cursor:pointer;">LEARN MORE</span>
+              <span style="font-size:10px;font-weight:700;color:#003B5C;letter-spacing:0.1em;border-bottom:2px solid #003B5C;padding-bottom:2px;cursor:pointer;">LEARN MORE</span>
             </div>
           </div>
 
@@ -698,17 +694,17 @@
               <div style="background:#f9fafb;border-radius:8px;height:160px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;overflow:hidden;">
                 <img src="images/vivint-thermostat-front.jpg" alt="Thermostat" style="height:140px;width:auto;object-fit:contain;">
               </div>
-              <h3 style="font-size:16px;font-weight:700;color:#1B365D;margin:0 0 8px;">Smart Thermostat</h3>
+              <h3 style="font-size:16px;font-weight:700;color:#003B5C;margin:0 0 8px;">Smart Thermostat</h3>
               <p style="font-size:12px;color:#6b7280;line-height:1.6;margin:0 0 14px;">Set your perfect temperature from any room or on the go. The Vivint Element thermostat is sleek, intuitive, and included.</p>
-              <span style="font-size:10px;font-weight:700;color:#1B365D;letter-spacing:0.1em;border-bottom:2px solid #1B365D;padding-bottom:2px;cursor:pointer;">LEARN MORE</span>
+              <span style="font-size:10px;font-weight:700;color:#003B5C;letter-spacing:0.1em;border-bottom:2px solid #003B5C;padding-bottom:2px;cursor:pointer;">LEARN MORE</span>
             </div>
             <div style="padding:28px 36px;">
               <div style="background:#f9fafb;border-radius:8px;height:160px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;overflow:hidden;">
                 <img src="images/deako-switches-bundle.jpg" alt="Deako Switches" style="height:140px;width:auto;object-fit:contain;">
               </div>
-              <h3 style="font-size:16px;font-weight:700;color:#1B365D;margin:0 0 8px;">Smart Lighting</h3>
+              <h3 style="font-size:16px;font-weight:700;color:#003B5C;margin:0 0 8px;">Smart Lighting</h3>
               <p style="font-size:12px;color:#6b7280;line-height:1.6;margin:0 0 14px;">~40 Deako smart switches standard in every home. Set scenes, schedules, and timers — all from the app or your voice.</p>
-              <span style="font-size:10px;font-weight:700;color:#1B365D;letter-spacing:0.1em;border-bottom:2px solid #1B365D;padding-bottom:2px;cursor:pointer;">LEARN MORE</span>
+              <span style="font-size:10px;font-weight:700;color:#003B5C;letter-spacing:0.1em;border-bottom:2px solid #003B5C;padding-bottom:2px;cursor:pointer;">LEARN MORE</span>
             </div>
           </div>
 
@@ -720,19 +716,19 @@
   <!-- ==================== SLIDE 16: WHY SWITCH - SUMMARY ==================== -->
   <div class="slide" data-slide="16">
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in py-6">
-      <p class="text-gold-400 font-semibold text-sm tracking-widest uppercase mb-3 mt-8">The Case for Change</p>
+      <p class="text-orange-400 font-semibold text-sm tracking-widest uppercase mb-3 mt-8">The Case for Change</p>
       <h2 class="text-4xl md:text-5xl font-bold mb-6 text-navy-700">Why make the switch?</h2>
       <div class="max-w-3xl w-full space-y-3">
         <div class="flex items-center gap-5 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-          <div class="icon-sm bg-gold-100 text-gold-600">$</div>
+          <div class="icon-sm bg-orange-100 text-orange-600">$</div>
           <p class="text-lg text-gray-600 text-left"><span class="text-navy-700 font-bold">Save $290 per home</span> — more products at a lower cost than what you pay today</p>
         </div>
         <div class="flex items-center gap-5 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-          <div class="icon-sm bg-gold-100 text-gold-600">1</div>
+          <div class="icon-sm bg-orange-100 text-orange-600">1</div>
           <p class="text-lg text-gray-600 text-left"><span class="text-navy-700 font-bold">One vendor relationship</span> — Deako manages everything, replacing 5 separate vendors</p>
         </div>
         <div class="flex items-center gap-5 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-          <div class="icon-sm bg-gold-100 text-gold-600">+</div>
+          <div class="icon-sm bg-orange-100 text-orange-600">+</div>
           <p class="text-lg text-gray-600 text-left"><span class="text-navy-700 font-bold">Better homebuyer experience</span> — white glove installation, one app, no DIY setup</p>
         </div>
         <div class="flex items-center gap-5 bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
@@ -743,8 +739,8 @@
           <div class="icon-sm bg-navy-100 text-navy-700">↗</div>
           <p class="text-lg text-gray-600 text-left"><span class="text-navy-700 font-bold">Expandable platform</span> — cameras, sensors, monitoring — buyers can grow their system over time</p>
         </div>
-        <div class="flex items-center gap-5 bg-gold-50 rounded-xl p-4 border border-gold-200 shadow-sm">
-          <div class="icon-sm bg-gold-200 text-gold-700">★</div>
+        <div class="flex items-center gap-5 bg-orange-50 rounded-xl p-4 border border-orange-200 shadow-sm">
+          <div class="icon-sm bg-orange-200 text-orange-700">★</div>
           <p class="text-lg text-navy-700 text-left font-semibold">Sleek, modern products that look great in any home</p>
         </div>
       </div>
@@ -757,23 +753,23 @@
       <div style="background:white;border-radius:10px;padding:6px 16px;display:inline-flex;align-items:center;margin-bottom:1rem;">
         <img src="images/risewell-logo.jpg" alt="Risewell" class="h-10" onerror="this.style.display='none'">
       </div>
-      <h2 class="text-4xl md:text-5xl font-black mb-4 leading-tight max-w-5xl text-white">Let's get<br><span class="text-gold-400">started</span></h2>
+      <h2 class="text-4xl md:text-5xl font-black mb-4 leading-tight max-w-5xl text-white">Let's get<br><span class="text-orange-400">started</span></h2>
       <div class="max-w-2xl w-full space-y-2 mb-4">
         <div class="flex items-center gap-5 bg-navy-800 rounded-xl p-4 border border-navy-600">
-          <div class="icon-sm bg-navy-600 text-gold-400">1</div>
+          <div class="icon-sm bg-navy-600 text-orange-400">1</div>
           <p class="text-base text-navy-100 text-left">Confirm product specifications and finalize pricing</p>
         </div>
         <div class="flex items-center gap-5 bg-navy-800 rounded-xl p-4 border border-navy-600">
-          <div class="icon-sm bg-navy-600 text-gold-400">2</div>
+          <div class="icon-sm bg-navy-600 text-orange-400">2</div>
           <p class="text-base text-navy-100 text-left">Set up a model home with the full Deako + Vivint experience</p>
         </div>
         <div class="flex items-center gap-5 bg-navy-800 rounded-xl p-4 border border-navy-600">
-          <div class="icon-sm bg-navy-600 text-gold-400">3</div>
+          <div class="icon-sm bg-navy-600 text-orange-400">3</div>
           <p class="text-base text-navy-100 text-left">Train your sales team on the new smart home offering</p>
         </div>
-        <div class="flex items-center gap-5 bg-gradient-to-r from-gold-400/20 to-navy-800 rounded-xl p-4 border border-gold-400/30">
-          <div class="icon-sm bg-gold-400/20 text-gold-400">4</div>
-          <p class="text-base text-gold-300 text-left font-semibold">Roll out to Washington communities, then expand nationally</p>
+        <div class="flex items-center gap-5 bg-gradient-to-r from-orange-400/20 to-navy-800 rounded-xl p-4 border border-orange-400/30">
+          <div class="icon-sm bg-orange-400/20 text-orange-400">4</div>
+          <p class="text-base text-orange-300 text-left font-semibold">Roll out to Washington communities, then expand nationally</p>
         </div>
       </div>
       <div class="bg-navy-800 rounded-2xl p-4 border border-navy-600 max-w-lg mb-4">
@@ -838,7 +834,7 @@
   </div>
   <div class="feedback-panel" id="feedbackPanel">
     <div style="display:flex;justify-content:space-between;align-items:center;">
-      <p style="font-weight:700;font-size:15px;color:#1B365D;margin:0;">Feedback</p>
+      <p style="font-weight:700;font-size:15px;color:#003B5C;margin:0;">Feedback</p>
       <span style="font-size:12px;color:#9ca3af;" id="feedbackSlideLabel">Slide 1</span>
     </div>
     <textarea id="feedbackInput" placeholder="What's working? What needs fixing? Be specific..."></textarea>
