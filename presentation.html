@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Deako + Vivint — A Smarter Home for Risewell</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
@@ -59,13 +58,10 @@
     .drop-zone { background: #f9fafb; border: 2px dashed #e5e7eb; border-radius: 8px; padding: 12px; text-align: center; color: #9ca3af; font-size: 13px; cursor: pointer; transition: all 0.2s; }
     .drop-zone.dragover { border-color: #E87722; background: rgba(232,165,48,0.05); color: #E87722; }
     .drop-zone:hover { border-color: #d1d5db; }
-    .capture-overlay { position: fixed; inset: 0; z-index: 200; cursor: crosshair; display: none; }
-    .capture-overlay.active { display: block; }
-    .capture-overlay canvas { position: absolute; top: 0; left: 0; }
-    .capture-selection { position: absolute; border: 2px solid #E87722; background: rgba(232,119,34,0.15); pointer-events: none; }
-    .capture-hint { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: rgba(0,59,92,0.9); color: white; padding: 16px 28px; border-radius: 10px; font-size: 16px; font-weight: 600; font-family: Poppins; pointer-events: none; z-index: 201; }
-    .capture-btn { background: #003B5C; color: #E87722; border: 1px solid #0e4d6e; border-radius: 8px; padding: 8px; cursor: pointer; font-size: 12px; font-family: Poppins; font-weight: 600; display: flex; align-items: center; gap: 6px; justify-content: center; flex: 1; }
+    .capture-btn { background: #003B5C; color: #E87722; border: 1px solid #0e4d6e; border-radius: 8px; padding: 8px; cursor: pointer; font-size: 12px; font-family: Poppins; font-weight: 600; display: flex; align-items: center; gap: 6px; justify-content: center; flex: 1; position: relative; }
     .capture-btn:hover { background: #0e4d6e; }
+    .capture-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: rgba(0,59,92,0.95); color: white; padding: 24px 36px; border-radius: 12px; font-size: 18px; font-weight: 600; font-family: Poppins; z-index: 201; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: fadeIn 0.3s ease; }
+    .capture-toast kbd { background: #0e4d6e; border: 1px solid #1a5f84; border-radius: 4px; padding: 2px 8px; font-size: 14px; }
     .screenshot-modal { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
     .screenshot-modal.open { display: flex; }
     .screenshot-modal img { max-width: 90vw; max-height: 90vh; border-radius: 8px; }
@@ -1034,130 +1030,77 @@
       if (label) label.textContent = `Slide ${current} of ${total}`;
     };
 
-    // Screen capture tool
+    // Screen capture tool - triggers Mac screenshot, then auto-catches paste
     function startCapture() {
-      // Close feedback panel during capture
+      // Close feedback panel
       document.getElementById('feedbackPanel').classList.remove('open');
 
-      // First render the page to a canvas using html2canvas
-      const captureHint = document.createElement('div');
-      captureHint.className = 'capture-hint';
-      captureHint.id = 'captureHint';
-      captureHint.textContent = 'Capturing slide...';
-      document.body.appendChild(captureHint);
+      // Show toast with instructions
+      const toast = document.createElement('div');
+      toast.className = 'capture-toast';
+      toast.id = 'captureToast';
+      toast.innerHTML = `
+        <div style="margin-bottom:12px;">Screenshot mode</div>
+        <div style="font-size:14px;font-weight:400;color:#b9c7df;line-height:1.8;">
+          Press <kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>Ctrl</kbd> <kbd>4</kbd> and drag to capture a region<br>
+          <span style="font-size:12px;color:#7a9bb5;">It copies to your clipboard automatically — we'll grab it.</span>
+        </div>
+        <div style="margin-top:16px;font-size:12px;color:#7a9bb5;">Press <kbd>Esc</kbd> to cancel</div>
+      `;
+      document.body.appendChild(toast);
 
-      html2canvas(document.body, {
-        useCORS: true,
-        allowTaint: true,
-        scale: window.devicePixelRatio || 1,
-        width: window.innerWidth,
-        height: window.innerHeight,
-        windowWidth: window.innerWidth,
-        windowHeight: window.innerHeight,
-      }).then(canvas => {
-        captureHint.textContent = 'Drag to select a region. Press Esc to cancel.';
+      // Auto-dismiss after 8 seconds if no action
+      const autoDismiss = setTimeout(() => {
+        cleanupToast();
+        document.getElementById('feedbackPanel').classList.add('open');
+      }, 8000);
 
-        // Create overlay
-        const overlay = document.createElement('div');
-        overlay.className = 'capture-overlay active';
-        overlay.id = 'captureOverlay';
-
-        // Show the actual slide as the background (not dimmed)
-        const bgCanvas = document.createElement('canvas');
-        bgCanvas.width = window.innerWidth;
-        bgCanvas.height = window.innerHeight;
-        const bgCtx = bgCanvas.getContext('2d');
-        bgCtx.drawImage(canvas, 0, 0, window.innerWidth, window.innerHeight);
-        bgCanvas.style.position = 'absolute';
-        bgCanvas.style.top = '0';
-        bgCanvas.style.left = '0';
-        overlay.appendChild(bgCanvas);
-
-        // Selection box
-        const selBox = document.createElement('div');
-        selBox.className = 'capture-selection';
-        selBox.id = 'captureSelBox';
-        overlay.appendChild(selBox);
-
-        document.body.appendChild(overlay);
-
-        let startX, startY, dragging = false;
-
-        overlay.addEventListener('mousedown', (e) => {
-          startX = e.clientX;
-          startY = e.clientY;
-          dragging = true;
-          selBox.style.left = startX + 'px';
-          selBox.style.top = startY + 'px';
-          selBox.style.width = '0px';
-          selBox.style.height = '0px';
-          selBox.style.display = 'block';
-        });
-
-        overlay.addEventListener('mousemove', (e) => {
-          if (!dragging) return;
-          const x = Math.min(e.clientX, startX);
-          const y = Math.min(e.clientY, startY);
-          const w = Math.abs(e.clientX - startX);
-          const h = Math.abs(e.clientY - startY);
-          selBox.style.left = x + 'px';
-          selBox.style.top = y + 'px';
-          selBox.style.width = w + 'px';
-          selBox.style.height = h + 'px';
-        });
-
-        overlay.addEventListener('mouseup', (e) => {
-          if (!dragging) return;
-          dragging = false;
-          const x = Math.min(e.clientX, startX);
-          const y = Math.min(e.clientY, startY);
-          const w = Math.abs(e.clientX - startX);
-          const h = Math.abs(e.clientY - startY);
-
-          if (w < 10 || h < 10) {
-            // Too small, cancel
-            cleanupCapture();
-            return;
-          }
-
-          // Crop from the original full-res canvas
-          const ratio = canvas.width / window.innerWidth;
-          const cropCanvas = document.createElement('canvas');
-          cropCanvas.width = w * ratio;
-          cropCanvas.height = h * ratio;
-          const cropCtx = cropCanvas.getContext('2d');
-          cropCtx.drawImage(canvas,
-            x * ratio, y * ratio, w * ratio, h * ratio,
-            0, 0, w * ratio, h * ratio
-          );
-
-          pendingScreenshot = cropCanvas.toDataURL('image/png');
-          dropPreview.src = pendingScreenshot;
-          dropPreview.style.display = 'block';
-          dropLabel.textContent = 'Screenshot captured (click to change)';
-
-          cleanupCapture();
-          // Reopen feedback panel
-          document.getElementById('feedbackPanel').classList.add('open');
-        });
-
-        // Esc to cancel
-        const escHandler = (e) => {
-          if (e.key === 'Escape') {
-            cleanupCapture();
-            document.getElementById('feedbackPanel').classList.add('open');
+      // Listen for paste (the screenshot will be on clipboard)
+      const pasteHandler = (e) => {
+        const items = e.clipboardData.items;
+        for (let item of items) {
+          if (item.type.startsWith('image/')) {
+            e.preventDefault();
+            processImageFile(item.getAsFile());
+            cleanupToast();
+            clearTimeout(autoDismiss);
+            document.removeEventListener('paste', pasteHandler);
             document.removeEventListener('keydown', escHandler);
+            // Reopen feedback panel
+            document.getElementById('feedbackPanel').classList.add('open');
+            break;
           }
-        };
-        document.addEventListener('keydown', escHandler);
-
-        function cleanupCapture() {
-          const ov = document.getElementById('captureOverlay');
-          if (ov) ov.remove();
-          const hint = document.getElementById('captureHint');
-          if (hint) hint.remove();
         }
-      });
+      };
+
+      const escHandler = (e) => {
+        if (e.key === 'Escape') {
+          cleanupToast();
+          clearTimeout(autoDismiss);
+          document.removeEventListener('paste', pasteHandler);
+          document.removeEventListener('keydown', escHandler);
+          document.getElementById('feedbackPanel').classList.add('open');
+        }
+      };
+
+      // Slight delay so the toast disappears before screenshot
+      setTimeout(() => {
+        toast.style.display = 'none';
+        document.addEventListener('paste', pasteHandler);
+        document.addEventListener('keydown', escHandler);
+        // Show toast again briefly after screenshot is likely taken
+        setTimeout(() => {
+          if (document.getElementById('captureToast')) {
+            toast.style.display = 'block';
+            toast.innerHTML = '<div>Now press <kbd>⌘</kbd> <kbd>V</kbd> to attach the screenshot</div><div style="font-size:12px;color:#7a9bb5;margin-top:8px;">Press <kbd>Esc</kbd> to cancel</div>';
+          }
+        }, 500);
+      }, 1500);
+
+      function cleanupToast() {
+        const t = document.getElementById('captureToast');
+        if (t) t.remove();
+      }
     }
   </script>
 </body>
