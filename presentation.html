@@ -95,9 +95,9 @@
   <!-- Version badge -->
   <!-- Fireworks canvas overlay -->
   <canvas id="fireworksCanvas" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
-  <button id="fireworksBtn" onclick="launchFireworks()" title="Launch fireworks!" style="display:none;position:fixed;bottom:18px;right:62px;z-index:200;background:none;border:none;cursor:pointer;font-size:26px;filter:drop-shadow(0 0 4px rgba(255,120,0,0.7));transition:transform 0.15s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">🎆</button>
+  <button id="fireworksBtn" onclick="launchFireworks()" title="Launch fireworks!" style="display:none;position:fixed;bottom:18px;right:62px;z-index:200;background:#E87722;border:none;border-radius:10px;cursor:pointer;padding:8px 14px;font-size:18px;color:white;font-family:Poppins,sans-serif;font-weight:600;letter-spacing:0.04em;box-shadow:0 2px 12px rgba(232,119,34,0.5);transition:all 0.15s;" onmouseover="this.style.transform='scale(1.07)';this.style.background='#003B5C'" onmouseout="this.style.transform='scale(1)';this.style.background='#E87722'">🎆 Celebrate</button>
 
-  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v39.1</div>
+  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v39.2</div>
 
   <!-- Progress bar -->
   <div class="fixed top-0 left-0 w-full h-1 bg-navy-100 z-50">
@@ -1003,6 +1003,7 @@
           setTimeout(function(cx,cy){return function(){burst(cx,cy);};}(x,y), 0);
         }
       }
+      var fwEndTime = Date.now() + maxLaunches * 350;
       for (var k = 0; k < maxLaunches; k++) { setTimeout(launchRocket, k*300 + Math.random()*200); }
       function animate() {
         ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -1026,14 +1027,14 @@
           p.x += p.vx; p.y += p.vy; p.vy += 0.08; p.vx *= 0.98;
           p.alpha -= p.decay;
         }
-        if (alive) { requestAnimationFrame(animate); }
+        if (alive || Date.now() < fwEndTime) { requestAnimationFrame(animate); }
         else { canvas.style.display='none'; _fwActive=false; _fwParticles=[]; }
       }
       animate();
     }
     function _updateFireworksBtn() {
       var btn = document.getElementById('fireworksBtn');
-      if (btn) btn.style.display = (current === 15) ? 'block' : 'none';
+      if (btn) btn.style.display = (current === 16) ? 'block' : 'none';
     }
 
   </script>
