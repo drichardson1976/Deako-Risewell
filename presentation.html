@@ -68,8 +68,11 @@
     .edit-btn.active { background: #E87722; color: white; border-color: #d4651a; }
     body.edit-mode [contenteditable="true"] { outline: 2px dashed rgba(232,119,34,0.4); outline-offset: 2px; cursor: text; }
     body.edit-mode [contenteditable="true"]:focus { outline: 2px solid #E87722; background: rgba(232,119,34,0.05); }
+    body.edit-mode .slide img { outline: 2px dashed rgba(232,119,34,0.35); outline-offset: 2px; cursor: pointer; }
+    body.edit-mode .slide img:hover { outline: 2px solid #E87722; }
     .edit-indicator { position: fixed; top: 8px; left: 50%; transform: translateX(-50%); z-index: 60; background: #E87722; color: white; padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; font-family: Montserrat; display: none; }
     body.edit-mode .edit-indicator { display: block; }
+    #imgEditPanel input[type=range] { width:100%; accent-color:#E87722; margin-bottom:8px; }
     .screenshot-modal { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
     .screenshot-modal.open { display: flex; }
     .screenshot-modal img { max-width: 90vw; max-height: 90vh; border-radius: 8px; }
@@ -99,7 +102,7 @@
   <!-- Fireworks canvas overlay -->
   <canvas id="fireworksCanvas" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
 
-  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v39.5</div>
+  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v39.6</div>
 
   <!-- Progress bar -->
   <div class="fixed top-0 left-0 w-full h-1 bg-navy-100 z-50">
@@ -618,7 +621,7 @@
         </div>
         <div class="bg-white rounded-xl p-6 border border-gray-200 text-center shadow-sm">
           <div class="h-28 flex items-center justify-center mb-3 bg-gray-50 rounded-lg overflow-hidden">
-            <img src="images/vivint-water-sensor.jpg" alt="Water Sensor" class="max-h-full max-w-full object-contain p-2" style="object-position:center center;">
+            <img src="images/vivint-water-sensor.jpg" alt="Water Sensor" style="width:100%;height:100%;object-fit:cover;object-position:0% 50%;">
           </div>
           <p class="font-semibold text-navy-700 text-sm">Water Sensor</p>
         </div>
@@ -1041,7 +1044,25 @@
   </div>
 
   <!-- Edit Mode Indicator -->
-  <div class="edit-indicator" id="editIndicator">EDIT MODE — click any text to edit &middot; changes auto-save</div>
+  <div class="edit-indicator" id="editIndicator">EDIT MODE — click text to edit &middot; click image to reposition &middot; changes auto-save</div>
+
+  <!-- Image Edit Panel -->
+  <div id="imgEditPanel" style="display:none;position:fixed;z-index:300;background:rgba(0,42,66,0.97);border:1px solid rgba(232,165,48,0.4);border-radius:10px;padding:14px 16px;width:230px;box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <span style="color:#E87722;font-size:11px;font-weight:700;letter-spacing:0.08em;font-family:Montserrat;">IMAGE POSITION</span>
+      <span onclick="closeImgEdit()" style="color:#9ca3af;cursor:pointer;font-size:18px;line-height:1;padding:0 2px;">&times;</span>
+    </div>
+    <div style="color:#9ca3af;font-size:10px;font-family:Montserrat;margin-bottom:4px;">FIT MODE</div>
+    <div style="display:flex;gap:6px;margin-bottom:12px;">
+      <button id="fitContain" onclick="setImgFit('contain')" style="flex:1;padding:5px 4px;border-radius:6px;border:1px solid rgba(232,165,48,0.4);background:none;color:#E87722;font-size:11px;cursor:pointer;font-family:Montserrat;">Contain</button>
+      <button id="fitCover" onclick="setImgFit('cover')" style="flex:1;padding:5px 4px;border-radius:6px;border:1px solid rgba(232,165,48,0.4);background:none;color:#E87722;font-size:11px;cursor:pointer;font-family:Montserrat;">Cover</button>
+    </div>
+    <div style="color:#9ca3af;font-size:10px;font-family:Montserrat;margin-bottom:3px;">HORIZONTAL &nbsp;<span id="imgPosXVal" style="color:#E87722;">50%</span></div>
+    <input type="range" id="imgPosX" min="0" max="100" value="50" oninput="updateImgPos()">
+    <div style="color:#9ca3af;font-size:10px;font-family:Montserrat;margin-bottom:3px;">VERTICAL &nbsp;<span id="imgPosYVal" style="color:#E87722;">50%</span></div>
+    <input type="range" id="imgPosY" min="0" max="100" value="50" oninput="updateImgPos()">
+    <button onclick="resetImgEdit()" style="width:100%;padding:5px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:none;color:#9ca3af;font-size:10px;cursor:pointer;font-family:Montserrat;margin-top:4px;">Reset to Default</button>
+  </div>
 
   <!-- Edit Toggle Button -->
   <div class="edit-btn" id="editBtn" onclick="toggleEditMode()" title="Toggle text editing">
@@ -1304,10 +1325,12 @@
     // ========== INLINE TEXT EDITING ==========
     let editMode = false;
     const EDITS_KEY = 'risewell-text-edits';
+    const IMG_EDITS_KEY = 'risewell-img-edits';
     const editableSelectors = 'h1, h2, h3, p, span, li';
 
     function toggleEditMode() {
       editMode = !editMode;
+      if (!editMode) closeImgEdit();
       document.body.classList.toggle('edit-mode', editMode);
       document.getElementById('editBtn').classList.toggle('active', editMode);
 
@@ -1325,6 +1348,120 @@
           el.removeEventListener('blur', saveEdit);
           el.removeEventListener('keydown', handleEditKey);
         }
+      });
+
+      document.querySelectorAll('.slide img').forEach(img => {
+        if (img.closest('.feedback-panel, .browser-bar, .version-badge')) return;
+        if (editMode) {
+          img.addEventListener('click', imgClickHandler);
+        } else {
+          img.removeEventListener('click', imgClickHandler);
+        }
+      });
+    }
+
+    // ── Image editing ────────────────────────────────────────────────────────
+    let imgEditTarget = null;
+
+    function imgClickHandler(e) {
+      e.stopPropagation();
+      openImgEdit(this, e);
+    }
+
+    function getImgKey(img) {
+      const slide = img.closest('.slide');
+      const slideNum = slide ? slide.getAttribute('data-slide') : '0';
+      const imgs = Array.from(slide.querySelectorAll('img'));
+      return slideNum + ':img[' + imgs.indexOf(img) + ']';
+    }
+
+    function openImgEdit(img, e) {
+      imgEditTarget = img;
+      const fit = img.style.objectFit || 'contain';
+      const posParts = (img.style.objectPosition || '50% 50%').split(' ');
+      const x = parseInt(posParts[0]) || 50;
+      const y = parseInt(posParts[1]) || 50;
+
+      document.getElementById('imgPosX').value = x;
+      document.getElementById('imgPosY').value = y;
+      document.getElementById('imgPosXVal').textContent = x + '%';
+      document.getElementById('imgPosYVal').textContent = y + '%';
+      _syncFitBtns(fit);
+
+      const panel = document.getElementById('imgEditPanel');
+      const rect = img.getBoundingClientRect();
+      let top = rect.bottom + 10;
+      let left = rect.left;
+      if (top + 240 > window.innerHeight) top = rect.top - 250;
+      if (left + 240 > window.innerWidth) left = window.innerWidth - 246;
+      if (left < 8) left = 8;
+      panel.style.top = top + 'px';
+      panel.style.left = left + 'px';
+      panel.style.display = 'block';
+    }
+
+    function closeImgEdit() {
+      document.getElementById('imgEditPanel').style.display = 'none';
+      imgEditTarget = null;
+    }
+
+    function _syncFitBtns(fit) {
+      document.getElementById('fitContain').style.background = fit === 'contain' ? '#E87722' : 'none';
+      document.getElementById('fitContain').style.color = fit === 'contain' ? 'white' : '#E87722';
+      document.getElementById('fitCover').style.background = fit === 'cover' ? '#E87722' : 'none';
+      document.getElementById('fitCover').style.color = fit === 'cover' ? 'white' : '#E87722';
+    }
+
+    function setImgFit(fit) {
+      if (!imgEditTarget) return;
+      imgEditTarget.style.objectFit = fit;
+      _syncFitBtns(fit);
+      saveImgEdit();
+    }
+
+    function updateImgPos() {
+      if (!imgEditTarget) return;
+      const x = document.getElementById('imgPosX').value;
+      const y = document.getElementById('imgPosY').value;
+      document.getElementById('imgPosXVal').textContent = x + '%';
+      document.getElementById('imgPosYVal').textContent = y + '%';
+      imgEditTarget.style.objectPosition = x + '% ' + y + '%';
+      saveImgEdit();
+    }
+
+    function resetImgEdit() {
+      if (!imgEditTarget) return;
+      imgEditTarget.style.objectFit = 'contain';
+      imgEditTarget.style.objectPosition = '50% 50%';
+      document.getElementById('imgPosX').value = 50;
+      document.getElementById('imgPosY').value = 50;
+      document.getElementById('imgPosXVal').textContent = '50%';
+      document.getElementById('imgPosYVal').textContent = '50%';
+      _syncFitBtns('contain');
+      const edits = JSON.parse(localStorage.getItem(IMG_EDITS_KEY) || '{}');
+      delete edits[getImgKey(imgEditTarget)];
+      localStorage.setItem(IMG_EDITS_KEY, JSON.stringify(edits));
+    }
+
+    function saveImgEdit() {
+      if (!imgEditTarget) return;
+      const edits = JSON.parse(localStorage.getItem(IMG_EDITS_KEY) || '{}');
+      edits[getImgKey(imgEditTarget)] = {
+        objectFit: imgEditTarget.style.objectFit,
+        objectPosition: imgEditTarget.style.objectPosition
+      };
+      localStorage.setItem(IMG_EDITS_KEY, JSON.stringify(edits));
+    }
+
+    function restoreImgEdits() {
+      const edits = JSON.parse(localStorage.getItem(IMG_EDITS_KEY) || '{}');
+      if (!Object.keys(edits).length) return;
+      document.querySelectorAll('.slide').forEach(slide => {
+        const slideNum = slide.getAttribute('data-slide');
+        Array.from(slide.querySelectorAll('img')).forEach((img, idx) => {
+          const e = edits[slideNum + ':img[' + idx + ']'];
+          if (e) { img.style.objectFit = e.objectFit; img.style.objectPosition = e.objectPosition; }
+        });
       });
     }
 
@@ -1388,6 +1525,7 @@
     }
 
     restoreEdits();
+    restoreImgEdits();
   </script>
 </body>
 </html>
