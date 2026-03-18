@@ -102,7 +102,7 @@
   <!-- Fireworks canvas overlay -->
   <canvas id="fireworksCanvas" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
 
-  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v39.7</div>
+  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v39.8</div>
 
   <!-- Progress bar -->
   <div class="fixed top-0 left-0 w-full h-1 bg-navy-100 z-50">
@@ -160,7 +160,7 @@
         </div>
         <div class="bg-white rounded-2xl p-7 border border-gray-200 text-center shadow-sm">
           <div class="h-44 flex items-center justify-center mb-4 bg-gray-50 rounded-xl p-3">
-            <img src="images/liftmaster-2100l.jpg" alt="LiftMaster 2100L" class="max-h-40 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🚗</div>'">
+            <img src="images/liftmaster-2100l.jpg" alt="LiftMaster 2100L" class="w-full h-full object-cover rounded-lg" style="object-position:center 65%;" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🚗</div>'">
           </div>
           <p class="text-xl font-bold text-navy-700 mb-1">LiftMaster</p>
           <p class="text-gray-400 text-sm">Garage Door</p>
@@ -307,7 +307,7 @@
           </button>
           <div class="garage-option" data-garage="0">
             <div class="h-44 flex items-center justify-center mb-4 bg-gray-50 rounded-xl p-3">
-              <img src="images/liftmaster-2100l.jpg" alt="LiftMaster 2100L" class="max-h-40 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🚗</div>'">
+              <img src="images/liftmaster-2100l.jpg" alt="LiftMaster 2100L" class="w-full h-full object-cover rounded-lg" style="object-position:center 65%;" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🚗</div>'">
             </div>
             <p class="text-lg font-bold text-navy-700 mb-1">Option 1: Keep LiftMaster</p>
             <p class="text-gray-400 text-xs">No change</p>
@@ -315,7 +315,7 @@
           </div>
           <div class="garage-option" data-garage="1" style="display:none;">
             <div class="h-44 flex items-center justify-center mb-4 bg-gray-50 rounded-xl p-3">
-              <img src="images/liftmaster-2100l.jpg" alt="LiftMaster 2100L" class="max-h-40 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🚗</div>'">
+              <img src="images/liftmaster-2100l.jpg" alt="LiftMaster 2100L" class="w-full h-full object-cover rounded-lg" style="object-position:center 65%;" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🚗</div>'">
             </div>
             <p class="text-lg font-bold text-navy-700 mb-1">Option 2: Vivint Integration</p>
             <p class="text-gray-400 text-xs">LiftMaster + myQ → Vivint</p>
@@ -1049,21 +1049,18 @@
   <div class="edit-indicator" id="editIndicator">EDIT MODE — click text to edit &middot; click image to reposition &middot; changes auto-save</div>
 
   <!-- Image Edit Panel -->
-  <div id="imgEditPanel" style="display:none;position:fixed;z-index:300;background:rgba(0,42,66,0.97);border:1px solid rgba(232,165,48,0.4);border-radius:10px;padding:14px 16px;width:230px;box-shadow:0 8px 32px rgba(0,0,0,0.4);">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-      <span style="color:#E87722;font-size:11px;font-weight:700;letter-spacing:0.08em;font-family:Montserrat;">IMAGE POSITION</span>
+  <div id="imgEditPanel" style="display:none;position:fixed;z-index:300;background:rgba(0,42,66,0.97);border:1px solid rgba(232,165,48,0.4);border-radius:10px;padding:14px 16px;width:240px;box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <span style="color:#E87722;font-size:11px;font-weight:700;letter-spacing:0.08em;font-family:Montserrat;">IMAGE ADJUST</span>
       <span onclick="closeImgEdit()" style="color:#9ca3af;cursor:pointer;font-size:18px;line-height:1;padding:0 2px;">&times;</span>
     </div>
-    <div style="color:#9ca3af;font-size:10px;font-family:Montserrat;margin-bottom:4px;">FIT MODE</div>
-    <div style="display:flex;gap:6px;margin-bottom:12px;">
-      <button id="fitContain" onclick="setImgFit('contain')" style="flex:1;padding:5px 4px;border-radius:6px;border:1px solid rgba(232,165,48,0.4);background:none;color:#E87722;font-size:11px;cursor:pointer;font-family:Montserrat;">Contain</button>
-      <button id="fitCover" onclick="setImgFit('cover')" style="flex:1;padding:5px 4px;border-radius:6px;border:1px solid rgba(232,165,48,0.4);background:none;color:#E87722;font-size:11px;cursor:pointer;font-family:Montserrat;">Cover</button>
-    </div>
-    <div style="color:#9ca3af;font-size:10px;font-family:Montserrat;margin-bottom:3px;">HORIZONTAL &nbsp;<span id="imgPosXVal" style="color:#E87722;">50%</span></div>
-    <input type="range" id="imgPosX" min="0" max="100" value="50" oninput="updateImgPos()">
-    <div style="color:#9ca3af;font-size:10px;font-family:Montserrat;margin-bottom:3px;">VERTICAL &nbsp;<span id="imgPosYVal" style="color:#E87722;">50%</span></div>
-    <input type="range" id="imgPosY" min="0" max="100" value="50" oninput="updateImgPos()">
-    <button onclick="resetImgEdit()" style="width:100%;padding:5px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:none;color:#9ca3af;font-size:10px;cursor:pointer;font-family:Montserrat;margin-top:4px;">Reset to Default</button>
+    <div style="color:#9ca3af;font-size:10px;font-family:Montserrat;margin-bottom:3px;">SCALE &nbsp;<span id="imgScaleVal" style="color:#E87722;">1.0×</span></div>
+    <input type="range" id="imgScale" min="50" max="400" value="100" step="5" oninput="updateImgTransform()">
+    <div style="color:#9ca3af;font-size:10px;font-family:Montserrat;margin-bottom:3px;">LEFT / RIGHT &nbsp;<span id="imgPosXVal" style="color:#E87722;">0</span></div>
+    <input type="range" id="imgPosX" min="-150" max="150" value="0" oninput="updateImgTransform()">
+    <div style="color:#9ca3af;font-size:10px;font-family:Montserrat;margin-bottom:3px;">UP / DOWN &nbsp;<span id="imgPosYVal" style="color:#E87722;">0</span></div>
+    <input type="range" id="imgPosY" min="-150" max="150" value="0" oninput="updateImgTransform()">
+    <button onclick="resetImgEdit()" style="width:100%;padding:5px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:none;color:#9ca3af;font-size:10px;cursor:pointer;font-family:Montserrat;margin-top:6px;">Reset to Default</button>
   </div>
 
   <!-- Edit Toggle Button -->
@@ -1379,23 +1376,27 @@
 
     function openImgEdit(img, e) {
       imgEditTarget = img;
-      const fit = img.style.objectFit || 'contain';
-      const posParts = (img.style.objectPosition || '50% 50%').split(' ');
-      const x = parseInt(posParts[0]) || 50;
-      const y = parseInt(posParts[1]) || 50;
+      // Parse existing transform: translate(tx%, ty%) scale(s)
+      const t = img.style.transform || '';
+      const tMatch = t.match(/translate\(([^,]+)%,\s*([^)]+)%\)/);
+      const sMatch = t.match(/scale\(([^)]+)\)/);
+      const tx = tMatch ? parseFloat(tMatch[1]) : 0;
+      const ty = tMatch ? parseFloat(tMatch[2]) : 0;
+      const scaleVal = sMatch ? Math.round(parseFloat(sMatch[1]) * 100) : 100;
 
-      document.getElementById('imgPosX').value = x;
-      document.getElementById('imgPosY').value = y;
-      document.getElementById('imgPosXVal').textContent = x + '%';
-      document.getElementById('imgPosYVal').textContent = y + '%';
-      _syncFitBtns(fit);
+      document.getElementById('imgPosX').value = tx;
+      document.getElementById('imgPosY').value = ty;
+      document.getElementById('imgScale').value = scaleVal;
+      document.getElementById('imgPosXVal').textContent = tx;
+      document.getElementById('imgPosYVal').textContent = ty;
+      document.getElementById('imgScaleVal').textContent = (scaleVal / 100).toFixed(1) + '×';
 
       const panel = document.getElementById('imgEditPanel');
       const rect = img.getBoundingClientRect();
       let top = rect.bottom + 10;
       let left = rect.left;
-      if (top + 240 > window.innerHeight) top = rect.top - 250;
-      if (left + 240 > window.innerWidth) left = window.innerWidth - 246;
+      if (top + 260 > window.innerHeight) top = rect.top - 270;
+      if (left + 250 > window.innerWidth) left = window.innerWidth - 256;
       if (left < 8) left = 8;
       panel.style.top = top + 'px';
       panel.style.left = left + 'px';
@@ -1407,39 +1408,29 @@
       imgEditTarget = null;
     }
 
-    function _syncFitBtns(fit) {
-      document.getElementById('fitContain').style.background = fit === 'contain' ? '#E87722' : 'none';
-      document.getElementById('fitContain').style.color = fit === 'contain' ? 'white' : '#E87722';
-      document.getElementById('fitCover').style.background = fit === 'cover' ? '#E87722' : 'none';
-      document.getElementById('fitCover').style.color = fit === 'cover' ? 'white' : '#E87722';
-    }
-
-    function setImgFit(fit) {
+    function updateImgTransform() {
       if (!imgEditTarget) return;
-      imgEditTarget.style.objectFit = fit;
-      _syncFitBtns(fit);
-      saveImgEdit();
-    }
-
-    function updateImgPos() {
-      if (!imgEditTarget) return;
-      const x = document.getElementById('imgPosX').value;
-      const y = document.getElementById('imgPosY').value;
-      document.getElementById('imgPosXVal').textContent = x + '%';
-      document.getElementById('imgPosYVal').textContent = y + '%';
-      imgEditTarget.style.objectPosition = x + '% ' + y + '%';
+      const x = parseFloat(document.getElementById('imgPosX').value);
+      const y = parseFloat(document.getElementById('imgPosY').value);
+      const s = parseFloat(document.getElementById('imgScale').value) / 100;
+      document.getElementById('imgPosXVal').textContent = x;
+      document.getElementById('imgPosYVal').textContent = y;
+      document.getElementById('imgScaleVal').textContent = s.toFixed(1) + '×';
+      imgEditTarget.style.transform = 'translate(' + x + '%, ' + y + '%) scale(' + s + ')';
+      imgEditTarget.style.transformOrigin = '50% 50%';
       saveImgEdit();
     }
 
     function resetImgEdit() {
       if (!imgEditTarget) return;
-      imgEditTarget.style.objectFit = 'contain';
-      imgEditTarget.style.objectPosition = '50% 50%';
-      document.getElementById('imgPosX').value = 50;
-      document.getElementById('imgPosY').value = 50;
-      document.getElementById('imgPosXVal').textContent = '50%';
-      document.getElementById('imgPosYVal').textContent = '50%';
-      _syncFitBtns('contain');
+      imgEditTarget.style.transform = '';
+      imgEditTarget.style.transformOrigin = '';
+      document.getElementById('imgPosX').value = 0;
+      document.getElementById('imgPosY').value = 0;
+      document.getElementById('imgScale').value = 100;
+      document.getElementById('imgPosXVal').textContent = '0';
+      document.getElementById('imgPosYVal').textContent = '0';
+      document.getElementById('imgScaleVal').textContent = '1.0×';
       const edits = JSON.parse(localStorage.getItem(IMG_EDITS_KEY) || '{}');
       delete edits[getImgKey(imgEditTarget)];
       localStorage.setItem(IMG_EDITS_KEY, JSON.stringify(edits));
@@ -1448,10 +1439,7 @@
     function saveImgEdit() {
       if (!imgEditTarget) return;
       const edits = JSON.parse(localStorage.getItem(IMG_EDITS_KEY) || '{}');
-      edits[getImgKey(imgEditTarget)] = {
-        objectFit: imgEditTarget.style.objectFit,
-        objectPosition: imgEditTarget.style.objectPosition
-      };
+      edits[getImgKey(imgEditTarget)] = { transform: imgEditTarget.style.transform };
       localStorage.setItem(IMG_EDITS_KEY, JSON.stringify(edits));
     }
 
@@ -1461,8 +1449,8 @@
       document.querySelectorAll('.slide').forEach(slide => {
         const slideNum = slide.getAttribute('data-slide');
         Array.from(slide.querySelectorAll('img')).forEach((img, idx) => {
-          const e = edits[slideNum + ':img[' + idx + ']'];
-          if (e) { img.style.objectFit = e.objectFit; img.style.objectPosition = e.objectPosition; }
+          const ed = edits[slideNum + ':img[' + idx + ']'];
+          if (ed && ed.transform) { img.style.transform = ed.transform; img.style.transformOrigin = '50% 50%'; }
         });
       });
     }
