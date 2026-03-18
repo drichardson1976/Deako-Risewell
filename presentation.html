@@ -62,6 +62,13 @@
     .capture-btn:hover { background: #0e4d6e; }
     .capture-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: rgba(0,59,92,0.95); color: white; padding: 24px 36px; border-radius: 12px; font-size: 18px; font-weight: 600; font-family: Poppins; z-index: 201; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: fadeIn 0.3s ease; }
     .capture-toast kbd { background: #0e4d6e; border: 1px solid #1a5f84; border-radius: 4px; padding: 2px 8px; font-size: 14px; }
+    .edit-btn { position: fixed; bottom: 8px; right: 56px; z-index: 60; background: #003B5C; border: 1px solid #0e4d6e; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #E87722; font-size: 18px; transition: all 0.2s; }
+    .edit-btn:hover { background: #0e4d6e; }
+    .edit-btn.active { background: #E87722; color: white; border-color: #d4651a; }
+    body.edit-mode [contenteditable="true"] { outline: 2px dashed rgba(232,119,34,0.4); outline-offset: 2px; cursor: text; }
+    body.edit-mode [contenteditable="true"]:focus { outline: 2px solid #E87722; background: rgba(232,119,34,0.05); }
+    .edit-indicator { position: fixed; top: 8px; left: 50%; transform: translateX(-50%); z-index: 60; background: #E87722; color: white; padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; font-family: Poppins; display: none; }
+    body.edit-mode .edit-indicator { display: block; }
     .screenshot-modal { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
     .screenshot-modal.open { display: flex; }
     .screenshot-modal img { max-width: 90vw; max-height: 90vh; border-radius: 8px; }
@@ -103,7 +110,7 @@
       </div>
       <h1 class="text-5xl md:text-7xl font-black mb-6 text-white leading-tight">A Smarter Home<br><span class="text-orange-400">for Risewell</span></h1>
       <p class="text-xl md:text-2xl text-navy-200 font-light mb-3">One integrated smart home solution.</p>
-      <p class="text-xl md:text-2xl text-white font-bold"><span class="text-orange-400">Saves money.</span> Delights homebuyers. Simplifies your operations.</p>
+      <p class="text-xl md:text-2xl text-white font-bold"><span class="text-orange-400">Saves money.</span> Simplifies your operations. Delights homebuyers.</p>
       <!-- Deako + Vivint logos (hidden for now, may use later)
       <div class="mb-8">
         <div style="background:white;border-radius:10px;padding:8px 20px;display:inline-flex;align-items:center;gap:12px;">
@@ -857,6 +864,14 @@
     <img id="modalImg" src="">
   </div>
 
+  <!-- Edit Mode Indicator -->
+  <div class="edit-indicator" id="editIndicator">EDIT MODE — click any text to edit &middot; changes auto-save</div>
+
+  <!-- Edit Toggle Button -->
+  <div class="edit-btn" id="editBtn" onclick="toggleEditMode()" title="Toggle text editing">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+  </div>
+
   <!-- Feedback Widget -->
   <div class="feedback-btn" onclick="toggleFeedback()" title="Give feedback on this slide">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -1098,6 +1113,87 @@
         if (t) t.remove();
       }
     }
+
+    // ========== INLINE TEXT EDITING ==========
+    let editMode = false;
+    const EDITS_KEY = 'risewell-text-edits';
+    const editableSelectors = 'h1, h2, h3, p, span, li';
+
+    function toggleEditMode() {
+      editMode = !editMode;
+      document.body.classList.toggle('edit-mode', editMode);
+      document.getElementById('editBtn').classList.toggle('active', editMode);
+
+      document.querySelectorAll('.slide ' + editableSelectors).forEach(el => {
+        // Skip elements that are just icons, images, or inside the feedback/nav
+        if (el.closest('.feedback-panel, .feedback-btn, .edit-btn, .browser-bar, .version-badge, .edit-indicator, script, style')) return;
+        if (el.children.length > 0 && el.textContent.trim().length < 3) return;
+
+        if (editMode) {
+          el.setAttribute('contenteditable', 'true');
+          el.addEventListener('blur', saveEdit);
+          el.addEventListener('keydown', handleEditKey);
+        } else {
+          el.removeAttribute('contenteditable');
+          el.removeEventListener('blur', saveEdit);
+          el.removeEventListener('keydown', handleEditKey);
+        }
+      });
+    }
+
+    function handleEditKey(e) {
+      // Prevent slide navigation while editing
+      e.stopPropagation();
+      // Enter = done editing (blur)
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        e.target.blur();
+      }
+    }
+
+    function saveEdit(e) {
+      const el = e.target;
+      const slide = el.closest('.slide');
+      if (!slide) return;
+      const slideNum = slide.getAttribute('data-slide');
+      // Create a stable key from slide + element path
+      const key = slideNum + ':' + getElementPath(el);
+      const edits = JSON.parse(localStorage.getItem(EDITS_KEY) || '{}');
+      edits[key] = el.innerHTML;
+      localStorage.setItem(EDITS_KEY, JSON.stringify(edits));
+    }
+
+    function getElementPath(el) {
+      const parts = [];
+      let node = el;
+      while (node && node !== document.body) {
+        const parent = node.parentElement;
+        if (!parent) break;
+        const siblings = Array.from(parent.children).filter(c => c.tagName === node.tagName);
+        const idx = siblings.indexOf(node);
+        parts.unshift(node.tagName.toLowerCase() + (siblings.length > 1 ? '[' + idx + ']' : ''));
+        node = parent;
+      }
+      return parts.join('/');
+    }
+
+    // Restore saved edits on load
+    function restoreEdits() {
+      const edits = JSON.parse(localStorage.getItem(EDITS_KEY) || '{}');
+      if (Object.keys(edits).length === 0) return;
+
+      document.querySelectorAll('.slide').forEach(slide => {
+        const slideNum = slide.getAttribute('data-slide');
+        slide.querySelectorAll(editableSelectors).forEach(el => {
+          const key = slideNum + ':' + getElementPath(el);
+          if (edits[key] !== undefined) {
+            el.innerHTML = edits[key];
+          }
+        });
+      });
+    }
+
+    restoreEdits();
   </script>
 </body>
 </html>
