@@ -1247,11 +1247,18 @@
       const slide = el.closest('.slide');
       if (!slide) return;
       const slideNum = slide.getAttribute('data-slide');
-      // Create a stable key from slide + element path
       const key = slideNum + ':' + getElementPath(el);
       const edits = JSON.parse(localStorage.getItem(EDITS_KEY) || '{}');
       edits[key] = el.innerHTML;
       localStorage.setItem(EDITS_KEY, JSON.stringify(edits));
+      // Also save to server (edits.json) so Claude can read them
+      try {
+        fetch('/save-edits', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(edits)
+        }).catch(() => {}); // silently fail if server isn't running
+      } catch(e) {}
     }
 
     function getElementPath(el) {
