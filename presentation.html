@@ -37,6 +37,8 @@
     .step-line { position: relative; }
     .step-line::before { content: ''; position: absolute; left: 19px; top: 48px; bottom: -24px; width: 2px; background: #e5e7eb; }
     .step-line:last-child::before { display: none; }
+    .version-badge { position: fixed; bottom: 10px; left: 12px; z-index: 60; background: rgba(0,0,0,0.35); color: rgba(255,255,255,0.45); font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 6px; cursor: pointer; letter-spacing: 0.05em; transition: opacity 0.2s; user-select: none; }
+    .version-badge:hover { opacity: 0.6; }
     /* Feedback panel */
     .feedback-btn { position: fixed; bottom: 8px; right: 8px; z-index: 60; background: #003B5C; border: 1px solid #2d4a77; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #E87722; font-size: 18px; transition: all 0.2s; }
     .feedback-btn:hover { background: #2d4a77; }
@@ -78,6 +80,9 @@
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
   </div>
+
+  <!-- Version badge -->
+  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v36.7</div>
 
   <!-- Progress bar -->
   <div class="fixed top-0 left-0 w-full h-1 bg-navy-100 z-50">
