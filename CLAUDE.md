@@ -8,6 +8,9 @@
 - Always `git pull` before starting work to pick up Eric's changes
 - Always `git push` after each set of changes
 - Flag any changes from Eric when pulling
+- Before editing presentation.html, read `edits.json` (if it exists) and apply any live edits Derek made in the browser first
+- After any changes, always post the localhost link: `http://localhost:8080/presentation.html`
+- Start server if not running: `python3 server.py`
 
 ## Risewell Brand Colors
 - Primary dark blue (navy): dominant color
