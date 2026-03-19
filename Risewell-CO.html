@@ -102,7 +102,7 @@
   <!-- Fireworks canvas overlay -->
   <canvas id="fireworksCanvas" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
 
-  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v42.2-CO</div>
+  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v42.3-CO</div>
 
   <!-- Progress bar -->
   <div class="fixed top-0 left-0 w-full h-1 bg-navy-100 z-50">
@@ -503,43 +503,85 @@
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in bg-navy-700">
       <p class="text-orange-400 font-semibold text-sm tracking-widest uppercase mb-6">At Scale</p>
       <h2 class="text-4xl md:text-6xl font-bold mb-8 text-white">What $290/home looks like<br>across your communities</h2>
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-6xl mb-6 w-full">
-        <div class="bg-navy-800 rounded-2xl p-5 border border-navy-600 text-center">
-          <p class="text-navy-300 text-xs uppercase tracking-widest mb-2">Talon Pointe</p>
-          <p class="text-navy-400 text-xs mb-3">Thornton</p>
-          <p class="text-sm text-navy-200 mb-1">352 homes</p>
-          <p class="text-2xl font-black text-orange-400">$102,080</p>
+      <div class="grid grid-cols-3 md:grid-cols-4 gap-3 max-w-6xl mb-6 w-full">
+        <div class="bg-navy-800 rounded-xl p-3 border border-navy-600 text-center">
+          <p class="text-navy-300 text-xs uppercase tracking-widest mb-1">Talon Pointe</p>
+          <p class="text-navy-400 text-xs mb-2">Thornton</p>
+          <p class="text-xs text-navy-200 mb-1">352 homes</p>
+          <p class="text-xl font-black text-orange-400">$102,080</p>
         </div>
-        <div class="bg-navy-800 rounded-2xl p-5 border border-navy-600 text-center">
-          <p class="text-navy-300 text-xs uppercase tracking-widest mb-2">Cordovan</p>
-          <p class="text-navy-400 text-xs mb-3">Firestone</p>
-          <p class="text-sm text-navy-200 mb-1">132 homes</p>
-          <p class="text-2xl font-black text-orange-400">$38,280</p>
+        <div class="bg-navy-800 rounded-xl p-3 border border-navy-600 text-center">
+          <p class="text-navy-300 text-xs uppercase tracking-widest mb-1">Cordovan</p>
+          <p class="text-navy-400 text-xs mb-2">Firestone</p>
+          <p class="text-xs text-navy-200 mb-1">132 homes</p>
+          <p class="text-xl font-black text-orange-400">$38,280</p>
         </div>
-        <div class="bg-navy-800 rounded-2xl p-5 border border-navy-600 text-center">
-          <p class="text-navy-300 text-xs uppercase tracking-widest mb-2">Windler</p>
-          <p class="text-navy-400 text-xs mb-3">Aurora</p>
-          <p class="text-sm text-navy-200 mb-1">110 homes</p>
-          <p class="text-2xl font-black text-orange-400">$31,900</p>
+        <div class="bg-navy-800 rounded-xl p-3 border border-navy-600 text-center">
+          <p class="text-navy-300 text-xs uppercase tracking-widest mb-1">Windler</p>
+          <p class="text-navy-400 text-xs mb-2">Aurora</p>
+          <p class="text-xs text-navy-200 mb-1">110 homes</p>
+          <p class="text-xl font-black text-orange-400">$31,900</p>
         </div>
-        <div class="bg-navy-800 rounded-2xl p-5 border border-navy-600 text-center">
-          <p class="text-navy-300 text-xs uppercase tracking-widest mb-2">Manors at Golden Overlook</p>
-          <p class="text-navy-400 text-xs mb-3">Golden</p>
-          <p class="text-sm text-navy-200 mb-1">92 homes</p>
-          <p class="text-2xl font-black text-orange-400">$26,680</p>
+        <div class="bg-navy-800 rounded-xl p-3 border border-navy-600 text-center">
+          <p class="text-navy-300 text-xs uppercase tracking-widest mb-1">Manors at Golden Overlook</p>
+          <p class="text-navy-400 text-xs mb-2">Golden</p>
+          <p class="text-xs text-navy-200 mb-1">92 homes</p>
+          <p class="text-xl font-black text-orange-400">$26,680</p>
         </div>
-        <div class="bg-navy-800 rounded-2xl p-5 border border-orange-400/20 text-center">
-          <p class="text-navy-300 text-xs uppercase tracking-widest mb-2">Spring Valley</p>
-          <p class="text-navy-400 text-xs mb-3">Longmont</p>
-          <p class="text-sm text-navy-200 mb-1">28 homes</p>
-          <p class="text-2xl font-black text-orange-400">$8,120</p>
+        <div class="bg-navy-800 rounded-xl p-3 border border-navy-600 text-center">
+          <p class="text-navy-300 text-xs uppercase tracking-widest mb-1">The Aurora Highlands</p>
+          <p class="text-navy-400 text-xs mb-2">Aurora</p>
+          <p class="text-xs text-navy-200 mb-1">176 homes</p>
+          <p class="text-xl font-black text-orange-400">$51,040</p>
+        </div>
+        <div class="bg-navy-800 rounded-xl p-3 border border-navy-600 text-center">
+          <p class="text-navy-300 text-xs uppercase tracking-widest mb-1">Pintail Commons</p>
+          <p class="text-navy-400 text-xs mb-2">Johnstown</p>
+          <p class="text-xs text-navy-200 mb-1">160 homes</p>
+          <p class="text-xl font-black text-orange-400">$46,400</p>
+        </div>
+        <div class="bg-navy-800 rounded-xl p-3 border border-navy-600 text-center">
+          <p class="text-navy-300 text-xs uppercase tracking-widest mb-1">The Casitas Collection</p>
+          <p class="text-navy-400 text-xs mb-2">Aurora</p>
+          <p class="text-xs text-navy-200 mb-1">110 homes</p>
+          <p class="text-xl font-black text-orange-400">$31,900</p>
+        </div>
+        <div class="bg-navy-800 rounded-xl p-3 border border-navy-600 text-center">
+          <p class="text-navy-300 text-xs uppercase tracking-widest mb-1">Parkway at Prairie Center</p>
+          <p class="text-navy-400 text-xs mb-2">Brighton</p>
+          <p class="text-xs text-navy-200 mb-1">77 homes</p>
+          <p class="text-xl font-black text-orange-400">$22,330</p>
+        </div>
+        <div class="bg-navy-800 rounded-xl p-3 border border-navy-600 text-center">
+          <p class="text-navy-300 text-xs uppercase tracking-widest mb-1">Highland Preserve</p>
+          <p class="text-navy-400 text-xs mb-2">Mead</p>
+          <p class="text-xs text-navy-200 mb-1">51 homes</p>
+          <p class="text-xl font-black text-orange-400">$14,790</p>
+        </div>
+        <div class="bg-navy-800 rounded-xl p-3 border border-navy-600 text-center">
+          <p class="text-navy-300 text-xs uppercase tracking-widest mb-1">Spring Valley</p>
+          <p class="text-navy-400 text-xs mb-2">Longmont</p>
+          <p class="text-xs text-navy-200 mb-1">28 homes</p>
+          <p class="text-xl font-black text-orange-400">$8,120</p>
+        </div>
+        <div class="bg-navy-800 rounded-xl p-3 border border-navy-600 text-center">
+          <p class="text-navy-300 text-xs uppercase tracking-widest mb-1">Cherry Meadows</p>
+          <p class="text-navy-400 text-xs mb-2">Colorado</p>
+          <p class="text-xs text-navy-200 mb-1">12 homes</p>
+          <p class="text-xl font-black text-orange-400">$3,480</p>
+        </div>
+        <div class="bg-navy-800 rounded-xl p-3 border border-orange-400/20 text-center">
+          <p class="text-navy-300 text-xs uppercase tracking-widest mb-1">The Villas Collection</p>
+          <p class="text-navy-400 text-xs mb-2">Littleton</p>
+          <p class="text-xs text-navy-200 mb-1">3 homes</p>
+          <p class="text-xl font-black text-orange-400">$870</p>
         </div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl w-full mb-6">
         <div class="bg-navy-800 rounded-2xl p-6 border border-navy-600 text-center">
           <p class="text-navy-300 text-xs uppercase tracking-widest mb-2">Colorado Total</p>
-          <p class="text-sm text-navy-200 mb-1">714+ homes across 13 communities</p>
-          <p class="text-3xl font-black text-orange-400">$207,060+</p>
+          <p class="text-sm text-navy-200 mb-1">1,303 homes across 12 communities</p>
+          <p class="text-3xl font-black text-orange-400">$377,870</p>
           <p class="text-navy-400 text-sm mt-1">in savings (growing)</p>
         </div>
         <div class="bg-gradient-to-b from-orange-400/20 to-navy-800 rounded-2xl p-6 border border-orange-400/30 text-center">
