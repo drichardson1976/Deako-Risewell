@@ -102,7 +102,7 @@
   <!-- Fireworks canvas overlay -->
   <canvas id="fireworksCanvas" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
 
-  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v41.8</div>
+  <div class="version-badge" onclick="this.style.display='none'" title="Click to hide">v41.9</div>
 
   <!-- Progress bar -->
   <div class="fixed top-0 left-0 w-full h-1 bg-navy-100 z-50">
@@ -301,26 +301,23 @@
           <p class="text-orange-400 text-xs mt-2 font-semibold">Vivint app</p>
         </div>
         <div class="bg-white rounded-2xl p-7 border-2 border-navy-200 text-center shadow-sm" id="garageCard" onclick="cycleGarage(1)" style="cursor:pointer;">
-          <p class="text-xl font-bold text-navy-700 mb-1">Vivint</p>
-          <p class="text-gray-400 text-sm mb-3">Smart Garage Door Opener</p>
           <div class="garage-option" data-garage="0">
             <div class="h-44 flex items-center justify-center mb-4 bg-gray-50 rounded-xl p-3">
               <img src="images/liftmaster-2100l.jpg" alt="LiftMaster 2100L" class="w-full h-full object-cover rounded-lg" style="object-position:center 65%;" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🚗</div>'">
             </div>
-            <p class="text-lg font-bold text-navy-700 mb-1">Option 1: Vivint Integration</p>
-            <p class="text-gray-400 text-xs">LiftMaster + myQ → Vivint</p>
-            <p class="text-orange-400 text-xs mt-2 font-semibold">$50 one-time charge · Vivint app</p>
-            <p class="text-gray-400 text-xs mt-2" style="font-style:italic;">click to see option 2</p>
+            <p class="text-xl font-bold text-navy-700 mb-1">Vivint</p>
+            <p class="text-gray-400 text-sm">Smart Garage Door Opener</p>
+            <p class="text-orange-400 text-xs mt-2 font-semibold">$50 one-time · Vivint app</p>
+            <p class="text-gray-400 text-xs mt-1" style="font-style:italic;">Option 1: LiftMaster + myQ → Vivint · click for option 2</p>
           </div>
           <div class="garage-option" data-garage="1" style="display:none;">
             <div class="h-44 flex items-center justify-center mb-4 bg-gray-50 rounded-xl p-3">
               <img src="images/vivint-garage-controller.jpg" alt="Vivint Garage Controller" class="max-h-40 object-contain rounded-lg" onerror="this.parentElement.innerHTML='<div class=\'text-5xl\'>🚗</div>'">
             </div>
-            <p class="text-lg font-bold text-navy-700 mb-1">Option 2: Vivint Controller</p>
-            <p class="text-gray-400 text-xs">Replace LiftMaster entirely</p>
-            <p class="text-orange-400 text-xs mt-2 font-semibold">Vivint app (free)</p>
-            <p class="text-gray-400 text-xs mt-1" style="font-style:italic;">Cost savings + works with any lift</p>
-            <p class="text-gray-400 text-xs mt-1" style="font-style:italic;">click to see option 1</p>
+            <p class="text-xl font-bold text-navy-700 mb-1">Vivint</p>
+            <p class="text-gray-400 text-sm">Smart Garage Door Opener</p>
+            <p class="text-orange-400 text-xs mt-2 font-semibold">Free · Vivint app</p>
+            <p class="text-gray-400 text-xs mt-1" style="font-style:italic;">Option 2: Replace LiftMaster · click for option 1</p>
           </div>
         </div>
         <div class="bg-white rounded-2xl p-7 border-2 border-navy-200 text-center shadow-sm">
@@ -562,8 +559,8 @@
     <div class="flex flex-col items-center justify-center min-h-screen w-full px-8 text-center fade-in">
       <p class="text-navy-400 font-semibold text-sm tracking-widest uppercase mb-6">The Homebuyer Experience</p>
       <h2 class="text-4xl md:text-6xl font-bold mb-8 text-navy-700">White glove from<br>close to connected</h2>
-      <div class="max-w-5xl w-full mb-8">
-        <img src="images/customer-journey.png" alt="Customer journey: home sold, handshake with Vivint installer, installation" class="w-full rounded-2xl shadow-sm">
+      <div class="max-w-3xl w-full mb-6">
+        <img src="images/customer-journey.png" alt="Customer journey: home sold, handshake with Vivint installer, installation" class="w-full rounded-2xl shadow-sm" style="max-height:200px;object-fit:cover;">
       </div>
       <div class="max-w-5xl w-full relative mt-4" style="padding:0 20px;">
         <!-- Connecting line -->
